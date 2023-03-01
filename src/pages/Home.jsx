@@ -11,7 +11,9 @@ export const Home = () => {
     
     axios.get('http://192.168.15.82:8091/api/v1/Proveedores/',{
       headers :{
-        Authorization: `Basic ZnRwc2FwOkluaWNpbzAx`, 
+        // Authorization: `Basic ZnRwc2FwOkluaWNpbzAx`, 
+        ContentType: 'application/json',
+        Authorization: 'Basic ZnRwc2FwOkluaWNpbzAx'
       }
     })
     .then(res=>{
