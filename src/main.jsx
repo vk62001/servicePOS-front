@@ -1,11 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from "react-router-dom";
 import App from './App'
 import './index.css'
-import { BrowserRouter } from "react-router-dom";
+import { store } from "./store/index"
+import { Provider } from 'react-redux';
 
-import { Provider } from 'react-redux'
-import { store } from './store';
+import './assets/fonts/Mulish-Bold.ttf';
+import './assets/fonts/Mulish-Light.ttf';
+import './assets/fonts/Mulish-Regular.ttf';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
@@ -13,5 +16,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <App />
     </BrowserRouter>
   </Provider>
-  ,
 )

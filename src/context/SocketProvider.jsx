@@ -1,10 +1,12 @@
 import React, { useEffect, useRef } from 'react'
 import { SocketContext } from './SocketContext';
 import { io } from "socket.io-client";
+import { useDispatch } from 'react-redux';
+import { setSocketTiendas } from '../store/data';
 
 export const SocketProvider = ({children}) => {
     const socketApp = useRef([]);
-
+    const dispatch = useDispatch();
     const connectSocket = () => {
         
         const URi = 'http://localhost:5002';
@@ -23,8 +25,9 @@ export const SocketProvider = ({children}) => {
         });
 
         socketApp.current.on('roomUsers', e=>{
-          console.log(e)
-        })
+          console.log(e.tiendas, '26')
+          dispatch(setSocketTiendas({socketTiendas:e.tiendas}));
+        });
       }
       
 
@@ -41,7 +44,7 @@ export const SocketProvider = ({children}) => {
     
 
     return (
-        <SocketContext.Provider value={{socketApp:socketApp.current}}>
+        <SocketContext.Provider value={{socketApp:socketApp}}>
             {children}
         </SocketContext.Provider>
       )
