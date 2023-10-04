@@ -28,16 +28,6 @@ export const NavBar = () => {
 
             >Tiendas</NavLink>
           </span>
-          <span className='p-4 hover:text-gold-500'>
-            <NavLink to="/resume"
-               className={({ isActive })  => isActive ? activeClassName : noActiveClassName}
-            >Gastos</NavLink>
-          </span>
-          <span className='p-4 hover:text-gold-500'>
-            <NavLink to="/usuarios"
-               className={({ isActive })  => isActive ? activeClassName : noActiveClassName}
-            >Usuarios</NavLink>
-          </span>
         </div>
       </div>
       <div className='user flex pr-4'>

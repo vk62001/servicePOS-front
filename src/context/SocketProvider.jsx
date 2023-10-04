@@ -25,7 +25,7 @@ export const SocketProvider = ({children}) => {
         });
 
         socketApp.current.on('roomUsers', e=>{
-          console.log(e.tiendas, '26')
+          console.log(e, '28 tiendas')
           dispatch(setSocketTiendas({socketTiendas:e.tiendas}));
         });
       }
