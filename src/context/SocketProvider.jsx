@@ -9,13 +9,13 @@ export const SocketProvider = ({children}) => {
     const dispatch = useDispatch();
     const connectSocket = () => {
         
-        const URi = 'http://localhost:5002';
+        const URi = import.meta.env.VITE_REACT_API_ZEUS;;
         const socket = io.connect(URi,{
           transports: ['websocket'], 
           upgrade: false,
           query:{
             tienda: 1,
-            room:'zona_norte'
+            room:'kernel'
           }
         });
       
