@@ -1,5 +1,5 @@
 import { SDKZeus } from "../../SDK/SDKZeus"
-import { setCentralTables, setTiendas, startLoader, stopLoader } from "./dataSlice";
+import { setCentralTables, setFlagTiendas, setTiendas, startLoader, stopLoader } from "./dataSlice";
 
 
 export const getAllPOS = () => {
@@ -7,7 +7,10 @@ export const getAllPOS = () => {
         dispatch(startLoader())
         try {
                 const {data} = await SDKZeus.getAllPOS();
-                await dispatch(setTiendas({tiendas:data.data.datas}))
+                dispatch(setTiendas({tiendas:data.data.datas}))
+                if(data.data.datas.length > 0) {
+                    dispatch(setFlagTiendas({flagTiendas:true}))
+                }
                 await dispatch(stopLoader())
         }catch(err){
             console.log(err)

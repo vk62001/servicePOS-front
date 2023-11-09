@@ -1,10 +1,15 @@
 import React, { useEffect, useRef } from 'react'
 import { SocketContext } from './SocketContext';
 import { io } from "socket.io-client";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setSocketTiendas } from '../store/data';
+import { delay } from '../utils/utils';
+
 
 export const SocketProvider = ({children}) => {
+
+    const {flagTiendas} = useSelector(state=>state.dataSlice);
+
     const socketApp = useRef([]);
     const dispatch = useDispatch();
     const connectSocket = () => {
@@ -33,14 +38,15 @@ export const SocketProvider = ({children}) => {
 
 
     useEffect(() => {
-        connectSocket();
+      if(flagTiendas)
+          connectSocket();
         return () => {
           if(Object.keys(socketApp.current).length>0){
             socketApp.current.off('connect');
             socketApp.current.off('disconnect');
           }
         };
-    }, [])
+    }, [flagTiendas])
     
 
     return (

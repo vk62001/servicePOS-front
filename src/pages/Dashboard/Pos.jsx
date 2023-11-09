@@ -13,42 +13,11 @@ import { MapaTienda } from '../../components/MapaTienda'
 
 export const Pos = () => {
 
-  const { tiendas, socketTiendas } = useSelector((state) => state.dataSlice);
-  const dispatch = useDispatch()
+  const { tiendas} = useSelector((state) => state.dataSlice);
+  
+  
 
-
-  const updatePOS = (data) => {
-    dispatch(updatePOSL(data));
-  }
-
-  const updateSockets = () => {
-    console.log(socketTiendas, '31 sockets');
-    if (Object.keys(tiendas).length > 0) {
-
-      const result = tiendas.map(e => {
-
-        if (socketTiendas) {
-          const check = socketTiendas.filter(j => e.clave === (+j.tienda));
-
-          if (check[0]) {
-            return {
-              ...e,
-              connected: true
-            }
-          };
-        }
-        return {
-          ...e,
-          connected: false
-        };
-      });
-      updatePOS(result);
-    }
-  }
-
-  useEffect(() => {
-    updateSockets()
-  }, [socketTiendas])
+  
 
 
 

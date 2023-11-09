@@ -5,7 +5,7 @@ console.log(URI,import.meta.env.VITE_REACT_API_ZEUS_credentials )
 
 export const APISQZeus = axios.create({
     baseURL: URI,
-    timeout: 5000,
+    timeout: 15000,
   //   headers :{
   //     Authorization: `Basic ${import.meta.env.VITE_REACT_API_ZEUS_credentials}`, 
   //     ContentType: 'application/json'

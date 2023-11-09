@@ -8,6 +8,7 @@ const initialState = {
   socketTiendas:[],
   loader:false,
   centralTables: [],
+  flagTiendas : false
 }
 
 export const dataSlice = createSlice({
@@ -36,6 +37,9 @@ export const dataSlice = createSlice({
     stopLoader: (state) => {
       state.loader = false;
     },
+    setFlagTiendas: (state, action) =>{
+      state.flagTiendas = action.payload.flagTiendas;
+    }
   },
 })
 
@@ -47,5 +51,7 @@ export const {
   setCentralTables,
   startLoader, 
   stopLoader, 
-  setSocketTiendas  } = dataSlice.actions
+  setSocketTiendas,
+  setFlagTiendas,
+} = dataSlice.actions
 
