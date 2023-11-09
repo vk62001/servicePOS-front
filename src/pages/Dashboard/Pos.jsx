@@ -90,7 +90,7 @@ export const Pos = () => {
       <div className='flex  pt-2 justify-start w-full h-full'>
         <Card
           title={"Tiendas"}
-          className='mt-24 justify-center mx-auto lg:w-11/12'
+          className='mt-24 justify-center mx-auto lg:w-11/12 '
         >
           <p className='text-gray-700 mulishRegular'>Puedes filtrar por localidad o buscar por número de tienda.</p>
           <div className='relative'>
@@ -101,7 +101,7 @@ export const Pos = () => {
               onChange={filter}
             />
           </div>
-          <div className='flex flex-wrap mt-8 justify-center h-3/6 overflow-auto'>
+          <div className='flex flex-wrap mt-8 justify-center h-3/6 overflow-auto pb-5'>
             {renderTiendas()}
           </div>
         </Card>
