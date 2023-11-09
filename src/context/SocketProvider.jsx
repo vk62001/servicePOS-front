@@ -38,6 +38,7 @@ export const SocketProvider = ({children}) => {
 
 
     useEffect(() => {
+      console.log('flag tiendas')
       if(flagTiendas)
           connectSocket();
         return () => {
