@@ -5,6 +5,10 @@ import { SocketContext } from '../../context/SocketContext'
 import { Card } from '../../components/Card'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShop, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
+import 'leaflet/dist/leaflet.css'
+
+import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
+
 
 import { LinkCard } from '../../components/LinkCard'
 
@@ -14,7 +18,7 @@ export const Home = () => {
 
 
   const { tiendas, socketTiendas } = useSelector((state) => state.dataSlice);
-  console.log(socketTiendas, '17')
+  console.log(socketTiendas, '1  7')
   const dispatch = useDispatch()
 
 
@@ -24,7 +28,8 @@ export const Home = () => {
   }
 
   const updateSockets = () => {
-    if (Object.keys(tiendas).length > 0 ) {
+    console.log(socketTiendas, '31 sockets');
+    if (Object.keys(tiendas).length > 0) {
 
       const result = tiendas.map(e => {
 
@@ -86,6 +91,19 @@ export const Home = () => {
   }
 
 
+  const renderTiendasMap = () => {
+    return tiendas.map(e=> {
+      const position = [e.latitud, e.longitud];
+      if(e.latitud){
+        return <Marker position={position} >
+          <Popup>
+              {e.descripcion}
+              </Popup>
+        </Marker>
+      }
+    })
+  }
+
   return (
     <div className='bg-gray-100 flex flex-col justify-start h-full'>
       <div className='flex  pt-2 justify-start w-full h-full'>
@@ -93,6 +111,19 @@ export const Home = () => {
           title={"Tiendas"}
           className='mt-24 justify-center mx-auto lg:w-11/12'
         >
+          <MapContainer center={[20.612132,-100.4515026]} zoom={9.4} scrollWheelZoom={false} >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {renderTiendasMap()}
+            <Marker position={[20.5946523, -100.3804233]}>
+              Tienda
+              <Popup>
+              Tienda
+              </Popup>
+            </Marker>
+          </MapContainer>
           <div className='flex flex-wrap mt-10 justify-center'>
             {renderTiendas()}
           </div>

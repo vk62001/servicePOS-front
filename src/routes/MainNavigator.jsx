@@ -13,11 +13,13 @@ export const MainNavigator = () => {
 
   return (
     <>
+    <SocketProvider >
       {auth ?
         <DashboardNavigation />
       :
         <AuthNavigation />
       }
+      </SocketProvider>
     </>
   )
 }
@@ -37,7 +39,6 @@ const AuthNavigation = () => {
 const DashboardNavigation = () => {
     return (
       <>
-      <SocketProvider>
         <NavBar />
         <Routes>
             <Route path='/' element={<Home />} />
@@ -47,7 +48,6 @@ const DashboardNavigation = () => {
              {/*<Route path='/usuarios' element={<Users/>} /> */}
             <Route index element={<Home />} />
         </Routes>
-      </SocketProvider>
       </>
     )
 }
