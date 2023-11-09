@@ -26,6 +26,12 @@ export const NavBar = () => {
             <NavLink to="/" 
             className={({ isActive })  => isActive ? activeClassName : noActiveClassName}
 
+            >Mapa</NavLink>
+          </span>
+          <span className='p-4 hover:text-gold-500'>
+            <NavLink to="/tiendas" 
+            className={({ isActive })  => isActive ? activeClassName : noActiveClassName}
+
             >Tiendas</NavLink>
           </span>
         </div>
