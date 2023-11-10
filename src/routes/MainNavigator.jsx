@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { NavBar } from '../components/NavBar'
 import { Monitor } from '../pages/Dashboard/Monitor'
 import { Pos } from '../pages/Dashboard/Pos'
-import { updatePOSL } from '../store/data'
+import { setCountDisconnect, updatePOSL } from '../store/data'
 
 export const MainNavigator = () => {
 
@@ -48,9 +48,8 @@ const DashboardNavigation = () => {
   }
 
   const updateSockets = () => {
-    console.log(socketTiendas, '51 sockets');
     if (Object.keys(tiendas).length > 0) {
-
+      let num =0;
       const result = tiendas.map(e => {
 
         if (socketTiendas) {
@@ -63,11 +62,15 @@ const DashboardNavigation = () => {
             }
           };
         }
+        //agregar un más
+        num = num+1;
         return {
           ...e,
           connected: false
         };
       });
+      //dispatch
+      dispatch(setCountDisconnect({countDisconnected: num}));
       updatePOS(result);
     }
   }

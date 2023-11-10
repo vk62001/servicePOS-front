@@ -8,7 +8,8 @@ const initialState = {
   socketTiendas:[],
   loader:false,
   centralTables: [],
-  flagTiendas : false
+  flagTiendas : false,
+  countDisconnected: 0,
 }
 
 export const dataSlice = createSlice({
@@ -39,6 +40,9 @@ export const dataSlice = createSlice({
     },
     setFlagTiendas: (state, action) =>{
       state.flagTiendas = action.payload.flagTiendas;
+    },
+    setCountDisconnect : (state, action) =>{
+      state.countDisconnected = action.payload.countDisconnected;
     }
   },
 })
@@ -53,5 +57,6 @@ export const {
   stopLoader, 
   setSocketTiendas,
   setFlagTiendas,
+  setCountDisconnect
 } = dataSlice.actions
 

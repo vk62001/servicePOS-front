@@ -97,7 +97,7 @@ export const Pos = () => {
             <FontAwesomeIcon icon={faSearch} className='text-sqgreen-900 absolute left-2 top-8' />
             <Input 
               placeholder={"Buscar tienda"}
-              className={"w-72 rounded-md mt-6 bg-white h-8"}
+              className={"w-72 md:w-72 rounded-md mt-6 bg-white h-8"}
               onChange={filter}
             />
           </div>
