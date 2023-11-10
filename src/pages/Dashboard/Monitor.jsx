@@ -1,30 +1,35 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Card } from "../../components/Card";
-import {Button} from '../../components/Button'
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { Button } from '../../components/Button'
+import { faBullhorn, faEye, faRecycle } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { getCentralTables } from "../../store/data";
 import { useNavigate, useParams } from "react-router-dom";
 import { SocketContext } from "../../context/SocketContext";
+import { CardData } from "../../components/CardData";
+import { PieChart } from "../../components/PieChart";
+
 export const Monitor = () => {
-  const {socketApp} = useContext(SocketContext); //este es el socket para conectarnos
-  const {id} = useParams();
-  const dispatch =  useDispatch();
-  const {centralTables, socketTiendas} = useSelector(state=>state.dataSlice);
+  const { socketApp } = useContext(SocketContext); //este es el socket para conectarnos
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const { centralTables, socketTiendas } = useSelector(state => state.dataSlice);
   const [central, setCentral] = useState([])
   const [posLocal, setPosLocal] = useState([]);
 
-  useEffect(() => {
-    dispatch(getCentralTables(id));
-    //peticion por sockets
-  }, [])
+
   
-  useEffect(() => {
-    if(Object.keys(centralTables).length>0)
-      show()
-  }, [centralTables])
- 
-  const show=() => {
+  // useEffect(() => {
+  //   dispatch(getCentralTables(id));
+  //   //peticion por sockets
+  // }, [])
+
+  // useEffect(() => {
+  //   if(Object.keys(centralTables).length>0)
+  //     show()
+  // }, [centralTables])
+
+  const show = () => {
     const newArray = [];
     for (const key in centralTables) {
       // console.log(key, centralTables[key]);
@@ -37,43 +42,43 @@ export const Monitor = () => {
     setCentral(newArray);
   };
 
-   const showPOS = (data)=>{
+  const showPOS = (data) => {
     const newArray = [];
     for (const key in data) {
       newArray.push({
-        tableName:key,
+        tableName: key,
         count: data[key]
       });
     }
     setPosLocal(newArray);
-   };
-
-  const filterSocketTienda = () => {
-    return socketTiendas.filter( e=>e.tienda===id);
   };
 
-  useEffect(() => {
-      if(Object.keys(socketTiendas).length>0){
-        const sockeTiendaId = filterSocketTienda();
-        console.log(sockeTiendaId)  
-        const objSockets = {
-            monitorId: socketApp.current.id,
-            socketTiendaId: sockeTiendaId[0].id
-          }
-        socketApp.current.emit('getCountRegistros', objSockets);
-        socketApp.current.on('setCountRegistros', data=>{
-            showPOS(data);
-        })
-      }
-    return () => {
-      
-    }
-  }, [socketTiendas])
-  
+  const filterSocketTienda = () => {
+    return socketTiendas.filter(e => e.tienda === id);
+  };
+
+  // useEffect(() => {
+  //     if(Object.keys(socketTiendas).length>0){
+  //       const sockeTiendaId = filterSocketTienda();
+  //       console.log(sockeTiendaId)  
+  //       const objSockets = {
+  //           monitorId: socketApp.current.id,
+  //           socketTiendaId: sockeTiendaId[0].id
+  //         }
+  //       socketApp.current.emit('getCountRegistros', objSockets);
+  //       socketApp.current.on('setCountRegistros', data=>{
+  //           showPOS(data);
+  //       })
+  //     }
+  //   return () => {
+
+  //   }
+  // }, [socketTiendas])
+
 
   const renderCentral = () => {
-    if(Object.keys(central).length===0) return;
-    return central.map((e)=>{
+    if (Object.keys(central).length === 0) return;
+    return central.map((e) => {
       return (
         <tr className="bg-white border-b" key={e.tableName}>
           <th
@@ -89,8 +94,8 @@ export const Monitor = () => {
   }
 
   const renderPOSLocal = () => {
-    if(Object.keys(posLocal).length===0) return;
-    return posLocal.map((e)=>{
+    if (Object.keys(posLocal).length === 0) return;
+    return posLocal.map((e) => {
       return (
         <tr className="bg-white border-b" key={e.tableName}>
           <th
@@ -107,94 +112,193 @@ export const Monitor = () => {
 
   return (
     <div className="mulishRegular bg-gray-100 flex flex-col justify-start h-full">
-      <div className="flex  pt-2 justify-start w-full h-full">
+      <div className="flex flex-col pt-2 justify-start w-full h-screen">
+        <div className="w-full flex mt-24">
+          <div className="w-7/12">
         <Card
-          title={`Tienda: ${id}`}
-          className="mt-24 justify-center mx-auto lg:w-11/12 bg-white"
-          classTitle="p-4"
+          title={`Tienda: Alamos`}
+          className=" justify-center mx-auto lg:w-11/12 md:w-11/12 bg-white h-96"
+          classTitle="p-4 mulishBold text-sqgreen-900 text-2xl"
+          classBody={'flex flex-wrap justify-around'}
         >
-          <div className="flex mt-10 w-10/12 justify-between ">
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg bg-gray-100">
-              <h1 className="mulishBold text-center p-2 ">Central</h1>
-              <table className="w-full text-sm text-left  text-gray-500 ">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-100  ">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">
-                      Tabla
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Conteo
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {renderCentral()}
-                </tbody>
-              </table>
+          <div className=" flex w-10/12 mx-0 items-center justify-between py-10 ">
+            <CardData
+              className={" flex justify-center items-center text-center"}
+            >
+              <h4 className="text-white  text-sm">Diagnostico central</h4>
+              <h1 className="text-white  text-3xl">98%</h1>
+              <h6 className="mulishLight text-white text-xs">Diagnostico central</h6>
+            </CardData>
+            <CardData
+              className={" flex justify-center items-center text-center"}
+            >
+              <h4 className="text-white  text-sm">Diagnostico central</h4>
+              <h1 className="text-white  text-3xl">98%</h1>
+              <h6 className="mulishLight text-white text-xs">Diagnostico central</h6>
+            </CardData>
+          </div>
+          <p className="text-center">Los datos se muestran en tiempo real</p>
+        </Card>
+        </div>
+        <div className="w-4/12">
+          <Card
+            title={"Coincidencias"}
+            className={"bg-white"}
+            classTitle="text-sqgreen-900 p-2"
+            classBody={"w-full"}
+          >
+            <div className="w-6/12">
+              <PieChart />
             </div>
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg bg-gray-100">
-              <h1 className="mulishBold text-center p-2 ">POS</h1>
-              <table className="w-full text-sm text-left  text-gray-500 ">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-100  ">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">
-                      Tabla
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Conteo
-                    </th>
-                    {/* <th scope="col" className="px-6 py-3">
-                      Central
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Diferencia
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Ver
-                    </th> */}
+          </Card>
+        </div>
+        </div>
+        <Card
+          // title={"Data"}
+          className={"mx-auto lg:w-11/12 md:w-11/12 mt-10 bg-white"}
+          // classTitle="p-4 mulishBold text-sqgreen-900 text-2xl"
+          classBody={"flex"}
+          classHR={'hidden'}
+        >
 
-                  </tr>
-                </thead>
-                <tbody>
-                {renderPOSLocal()}
-                </tbody>
-              </table>
-            </div>
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg bg-gray-100">
-              <h1 className="mulishBold text-center p-2 ">POS Live</h1>
-              <table className="w-full text-sm text-left  text-gray-500 ">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-100  ">
+          <div className="w-5/12 flex justify-center">
+            <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-2 w-10/12">
+            <h1 className="mulishBold text-sqgreen-900 w-full m-2">POS</h1>
+              <table className="w-full text-xs text-left text-gray-500" >
+                <thead className="text-xs text-gray-700 bg-gray-100">
                   <tr>
-                    <th scope="col" className="px-6 py-3">
-                      Tabla
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Conteo
-                    </th>
-                    {/* <th scope="col" className="px-6 py-3">
-                      Central
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Diferencia
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Ver
-                    </th> */}
-
-                  </tr>
-                </thead>
-                <tbody>
-                <tr className="bg-white border-b  ">
                     <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+                      scope="col"
+                      className={"w-1/12 py-3  text-center"}
                     >
-                      {centralTables.source}
+                      Tabla
                     </th>
-                    <td className="px-6 py-4">Silver</td>
+                    <th
+                      scope="col"
+                      className={"w-1/12 py-3  text-center"}
+                    >
+                      Conteo
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">ID</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">Source</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">Apertura</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">Historiales</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">Ventas</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">Devoluciones</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">Tickets</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">Remesas</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr>
+                    <td className="text-center py-1">Pedidos</td>
+                    <td className="text-center py-1">11</td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+          <div className="w-5/12 flex justify-center ">
+            <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-2 w-10/12">
+            <h1 className="mulishBold text-sqgreen-900 w-full m-2">CENTRAL</h1>
+              <table className="w-full text-xs text-left text-gray-500" >
+                <thead className="text-xs text-gray-700 bg-gray-100">
+                  <tr>
+                    <th
+                      scope="col"
+                      className={"w-1/12 py-3  text-center"}
+                    >
+                      Tabla
+                    </th>
+                    <th
+                      scope="col"
+                      className={"w-1/12 py-3  text-center"}
+                    >
+                      Conteo
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">ID</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">Source</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">Apertura</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">Historiales</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">Ventas</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">Devoluciones</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">Tickets</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="text-center py-1">Remesas</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                  <tr>
+                    <td className="text-center py-1">Pedidos</td>
+                    <td className="text-center py-1">11</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="w-2/12 flex flex-col items-center justify-center">
+            <div>
+              <Button
+                title=""
+                icon={faRecycle}
+                className={"bg-sqgreen-900 w-10 rounded"}
+              />
+              <span className="text-gray-700 text-small">Actualizar</span>
+            </div>
+            <div className="mt-6">
+              <Button
+                title=""
+                icon={faBullhorn}
+                className={"bg-sqgreen-900 w-10 rounded"}
+              />
+              <span className="text-gray-700 text-small">Reportar</span>
             </div>
           </div>
         </Card>
