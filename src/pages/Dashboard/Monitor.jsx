@@ -140,15 +140,23 @@ export const Monitor = () => {
           <p className="text-center">Los datos se muestran en tiempo real</p>
         </Card>
         </div>
-        <div className="w-4/12">
+        <div className="w-4/12 flex justiy-center">
           <Card
             title={"Coincidencias"}
             className={"bg-white"}
             classTitle="text-sqgreen-900 p-2"
-            classBody={"w-full"}
+            classBody={"w-full flex justify-center flex-col pb-2"}
           >
-            <div className="w-6/12">
+            <h1 className="mulishRegular text-center w-full text-1xl text-sqgreen-900">Porcentaje de coincidencia</h1>
+            <div className="w-full flex justify-center ">
               <PieChart />
+            </div>
+            <p className="text-xs text-gray-700 m-2 text-center">Si los datos entre Central y POS tienen una diferencia de más del 10% favor de reportarlo</p>
+            <div className="w-full flex justify-center items-center">
+              <Button 
+                title={"Reportar"}
+                className={"bg-sqgreen-900 text-white md:w-40"}
+              />
             </div>
           </Card>
         </div>
