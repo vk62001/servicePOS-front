@@ -27,5 +27,5 @@ export const PieChart = () => {
       };
  
 
-    return <Doughnut data={data} />;
+    return <div className='w-44'><Doughnut data={data} /></div>;
 }
