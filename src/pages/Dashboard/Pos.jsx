@@ -71,6 +71,10 @@ useEffect(() => {
       filter(textTienda)
       return;
     }
+    if(selectRadio!=='todos' && tiendas.length===0) {
+      filterRadio();
+      return;
+    };
     setTempTiendas(tiendas);
     return () => {
       setTempTiendas([]);
