@@ -46,7 +46,7 @@ export const Pos = () => {
          comparation =  tiendas.filter(element=>element.connected);
       break;
       case 'desconectados':
-        comparation =  tiendas.filter(element=>element.connected);
+        comparation =  tiendas.filter(element=>!element.connected);
         break;
       default:
         break;
