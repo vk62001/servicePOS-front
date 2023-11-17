@@ -22,7 +22,6 @@ export const Pos = () => {
   const [selectRadio, setSelectRadio] = useState('todos')
 
   const filter = (text) => {
-    console.log(text, 'entra y por qué?')
     setTextTienda(text);
     if (text.length === 0) {
       setTempTiendas(tiendas);
@@ -38,30 +37,31 @@ export const Pos = () => {
   }
 
   const filterRadio = () => {
+    let comparation;
     switch (selectRadio) {
       case 'todos':
-          setTempTiendas(tiendas);
-        return;
+          comparation =  tiendas;
+        break;
       case 'conectados':
-        const newData =  tiendas.filter(element=> element.connected)
-        setTempTiendas(newData);
-      return;
+         comparation =  tiendas.filter(element=>element.connected);
+      break;
       case 'desconectados':
-        const data =  tiendas.filter(element=> !element.connected)
-        setTempTiendas(data);
-      return;
+        comparation =  tiendas.filter(element=>element.connected);
+        break;
       default:
         break;
     }
-    const newData =  tiendas.filter()
+
+    setTempTiendas(comparation);
+
+
   }
 
 
 
 useEffect(() => {
+  setTextTienda('');
   filterRadio();
-  
-
 }, [selectRadio])
 
 
@@ -71,7 +71,8 @@ useEffect(() => {
       filter(textTienda)
       return;
     }
-    if(selectRadio!=='todos' && tiendas.length===0) {
+    if(selectRadio!=='todos' && textTienda.length===0) {
+      console.log("entra filtro")
       filterRadio();
       return;
     };
@@ -129,6 +130,7 @@ useEffect(() => {
                 placeholder={"Buscar tienda"}
                 className={"w-72 md:w-72 rounded-md mt-6 bg-white h-8"}
                 onChange={filter}
+                value={textTienda}
               />
             </div>
             <div className='w-6/12 flex justify-end items-center'>
