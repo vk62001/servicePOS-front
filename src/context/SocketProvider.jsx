@@ -3,7 +3,7 @@ import { SocketContext } from './SocketContext';
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
 import { setSocketTiendas } from '../store/data';
-import { delay } from '../utils/utils';
+import { delay, playAlertSound } from '../utils/utils';
 
 
 export const SocketProvider = ({children}) => {
@@ -11,6 +11,7 @@ export const SocketProvider = ({children}) => {
     const {flagTiendas} = useSelector(state=>state.dataSlice);
 
     const socketApp = useRef([]);
+    const counterConecctions =  useRef(0);
     const dispatch = useDispatch();
     const connectSocket = () => {
         
@@ -28,10 +29,21 @@ export const SocketProvider = ({children}) => {
         socketApp.current.on('connect', ()=>{
           console.log('connect');
         });
+        socketApp.current.on('disconnect', ()=>{
+          console.log('desconectado');
+        });
 
         socketApp.current.on('roomUsers', e=>{
-          console.log(e, '28 tiendas')
+          console.log(e.tiendas, '37 sockerProvider');
+          const tiendasTemp = e.tiendas ?  e.tiendas.length :  0;
+          if(tiendasTemp > counterConecctions.current){
+            counterConecctions.current =  tiendasTemp;
+          }else{
+            playAlertSound();
+            counterConecctions.current =  tiendasTemp;
+          }
           dispatch(setSocketTiendas({socketTiendas:e.tiendas}));
+
         });
       }
       

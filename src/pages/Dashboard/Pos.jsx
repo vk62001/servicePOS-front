@@ -98,7 +98,7 @@ useEffect(() => {
               <img src={BardCode} />
             </div>
             <div className={`w-6/12 tex-xs mulishBold  ${e.connected ? 'text-sqgreen-900' : 'text-red-600'}`}>
-              <p className='text-small'>ID {e.id} </p>
+              <p className='text-small'>ID {e.clave} </p>
               <p className='text-small'>{title[1]} </p>
               <p className='text-small'>{e.ciudad} </p>
             </div>
