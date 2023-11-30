@@ -1,10 +1,13 @@
 import { APISQZeus } from "./instanceZeuz";
 
 export const SDKZeus = {
-    getAllPOS :  function(){
-        return APISQZeus.get(`api/pos/getTiendas`);
-    },
-    getAllTables: function(id){
-        return APISQZeus.get(`api/pos/getTables/${id}`);
-    }
-}
+  getAllPOS :  function(){
+    return APISQZeus.get(`api/pos/getTiendas`);
+  },
+  getAllTables: function(id){
+    return APISQZeus.get(`api/pos/getTables/${id}`);
+  },
+  getLogConnection: function () {
+    return APISQZeus.get(`api/logConnection`);
+  },
+};

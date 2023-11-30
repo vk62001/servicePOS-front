@@ -1,5 +1,5 @@
 import { SDKZeus } from "../../SDK/SDKZeus"
-import { setCentralTables, setFlagTiendas, setTiendas, startLoader, stopLoader } from "./dataSlice";
+import { setCentralTables, setFlagTiendas, setLogConnection, setTiendas, startLoader, stopLoader } from "./dataSlice";
 
 
 export const getAllPOS = () => {
@@ -43,3 +43,14 @@ export const updatePOSL = (data) => {
     }
 }
 
+  export const getCentralLogConnection = () => {
+    return async (dispatch, getState) => {
+      try {
+        const { data } = await SDKZeus.getLogConnection();
+        console.log(data);
+        await dispatch(setLogConnection(data.data))
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  }

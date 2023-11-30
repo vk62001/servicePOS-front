@@ -4,19 +4,20 @@ import './App.css'
 import { SocketProvider } from './context/SocketProvider'
 import { MainNavigator } from './routes/MainNavigator'
 import { Loader } from './components/Loader'
-import { getAllPOS } from './store/data'
+import { getAllPOS, getCentralLogConnection } from './store/data'
 import { useDispatch } from 'react-redux'
 
 function App() {
   const dispatch = useDispatch();
-useEffect(() => {
-  dispatch(getAllPOS())
-}, [])
+  useEffect(() => {
+    dispatch(getAllPOS())
+    dispatch(getCentralLogConnection());
+  }, [])
 
   return (
     <>
-    <MainNavigator />
-    <Loader />
+      <MainNavigator />
+      <Loader />
     </>
   )
 }
