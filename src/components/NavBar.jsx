@@ -40,7 +40,7 @@ export const NavBar = () => {
       <div className='user flex pr-4'>
         <div onClick={()=>setShowNotifications(!showNotifications)} className='notifications mr-4 relative cursor-pointer'>
           <FontAwesomeIcon icon={faBell} className="text-white" />
-          <span style={{fontSize:10}} className='dot flex bg-gold-500 absolute text-sqgreen-900 items-center justify-center rounded-full w-5 h-5 text-small -left-2 -top-3'>{countDisconnected}</span>
+          {/* <span style={{fontSize:10}} className='dot flex bg-gold-500 absolute text-sqgreen-900 items-center justify-center rounded-full w-5 h-5 text-small -left-2 -top-3'>{countDisconnected}</span> */}
         </div>
         <div className='name text-sm text-white'>Eder Domínguez</div>
         <div className='dropdonw px-4' onClick={()=>setMenuClose(!menuClose)}><FontAwesomeIcon icon={faChevronDown} className="text-white cursor-pointer" /></div>
