@@ -47,7 +47,6 @@ export const updatePOSL = (data) => {
     return async (dispatch, getState) => {
       try {
         const { data } = await SDKZeus.getLogConnection();
-        console.log(data);
         await dispatch(setLogConnection(data.data))
       } catch (err) {
         console.log(err);

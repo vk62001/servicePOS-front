@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { SocketContext } from './SocketContext';
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
-import { setSocketTiendas } from '../store/data';
+import { getCentralLogConnection, setSocketTiendas } from '../store/data';
 import { delay, playAlertSound } from '../utils/utils';
 
 
@@ -40,7 +40,10 @@ export const SocketProvider = ({children}) => {
             counterConecctions.current =  tiendasTemp;
           }else{
             playAlertSound();
+            dispatch(getCentralLogConnection());
             counterConecctions.current =  tiendasTemp;
+
+
           }
           dispatch(setSocketTiendas({socketTiendas:e.tiendas}));
 

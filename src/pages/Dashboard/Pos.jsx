@@ -1,15 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { updatePOSL } from '../../store/data'
-import { SocketContext } from '../../context/SocketContext'
+import React, {  useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Card } from '../../components/Card'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faC, faSearch, faShop, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { faSearch, faShop} from '@fortawesome/free-solid-svg-icons'
 import 'leaflet/dist/leaflet.css'
 import BardCode from '../../assets/images/barCode.png';
-
 import { LinkCard } from '../../components/LinkCard'
-import { MapaTienda } from '../../components/MapaTienda'
 import { Input } from '../../components/Input'
 import { RadioSearchPos } from '../../components/RadioSearchPos'
 

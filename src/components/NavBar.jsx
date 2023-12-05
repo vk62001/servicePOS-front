@@ -9,8 +9,8 @@ import { Notifications } from './Notifications';
 
 
 export const NavBar = () => {
-  const {user, countDisconnected} = useSelector(state=>state.dataSlice);
-  console.log(countDisconnected)
+
+  const {user, countDisconnected, logConnection} = useSelector(state=>state.dataSlice);
   const [showNotifications, setShowNotifications] = useState(false);
   const [menuClose, setMenuClose] = useState(false);
 
@@ -48,6 +48,7 @@ export const NavBar = () => {
       {showNotifications ?
         <Notifications 
           className={''}
+          items = {logConnection}
         />
       :null}
       {menuClose? < MenuSingOut />:null}
