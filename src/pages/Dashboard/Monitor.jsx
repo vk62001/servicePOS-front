@@ -24,11 +24,10 @@ export const Monitor = () => {
   );
   const [central, setCentral] = useState([]);
   const [posLocal, setPosLocal] = useState([]);
-  const [truePercentage, setTruePercentage] =  useState(0);
-  const [badPercentage, setBadPercentage] =  useState(0);
-  const [totalRegisterPOS, setTotalRegisterPOS] =  useState(0);
+  const [truePercentage, setTruePercentage] = useState(0);
+  const [badPercentage, setBadPercentage] = useState(0);
+  const [totalRegisterPOS, setTotalRegisterPOS] = useState(0);
   const [totalRegisterCentral, setTotalRegisterCentral] = useState(0);
-
 
   // useEffect(() => {
   //   dispatch(getCentralTables(id));
@@ -85,40 +84,53 @@ export const Monitor = () => {
   //   }
   // }, [socketTiendas])
   const getcountInfo = async () => {
-    const { data } = await SDKZeus.getCountInfo(id);
-    setCentral(data.data.countCentral);
-    setPosLocal(data.data.countTienda);
-    
-    const Central =  data.data.countCentral;
-    const Tienda =  data.data.countTienda;
-    const total =(Object.keys(Central).length) - 2
-    let totalTemp = 0;
-    let totalCentral = 0;
-    let totalPOS = 0;
-    for (const i in Central) {
-        if(i !== 'source' && i !== 'id' ){
+    try {
+      const { data } = await SDKZeus.getCountInfo(id);
+      setCentral(data.data.countCentral);
+      setPosLocal(data.data.countTienda);
+
+      const Central = data.data.countCentral;
+      const Tienda = data.data.countTienda;
+      const total = Object.keys(Central).length - 2;
+      let totalTemp = 0;
+      let totalCentral = 0;
+      let totalPOS = 0;
+      for (const i in Central) {
+        if (i !== "source" && i !== "id") {
           totalCentral = totalCentral + Central[i];
           for (const j in Tienda) {
-            if(j !== 'source' && j !== 'id' ){
-                if(j === i) {
-                  if(Central[i] ===  Tienda[j]){
-                    totalTemp+=1;
-                    totalPOS = totalPOS + Tienda[j];
-                  }
+            if (j !== "source" && j !== "id") {
+              if (j === i) {
+                if (Central[i] === Tienda[j]) {
+                  totalTemp += 1;
+                  totalPOS = totalPOS + Tienda[j];
                 }
+              }
             }
           }
+        }
       }
+      const godPercentage = (totalTemp * 100) / total;
+      setTruePercentage(godPercentage);
+      setBadPercentage(100 - godPercentage);
+      console.log(totalCentral, "+", totalPOS);
+      setTotalRegisterCentral(totalCentral);
+      setTotalRegisterPOS(totalPOS);
+    } catch (err) {
+      console.log(err);
     }
-    const godPercentage  = (totalTemp *  100) / total; 
-    setTruePercentage(godPercentage);
-    setBadPercentage(100-godPercentage);
-    console.log(totalCentral, '+', totalPOS);
-    setTotalRegisterCentral(totalCentral);
-    setTotalRegisterPOS(totalPOS);
+  };
+  const getCountInfoDiaAnterior = async () => {
+    try {
+      const { data } = await SDKZeus.getCountDiaAnterior(id);
+      console.log(data.data, "datos dia anterior");
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     getcountInfo();
+    getCountInfoDiaAnterior();
     return () => {};
   }, []);
 
@@ -158,7 +170,9 @@ export const Monitor = () => {
                   className={" flex justify-center items-center text-center"}
                 >
                   <h4 className="text-white  text-sm">Diagnostico central</h4>
-                  <h1 className="text-white  text-3xl">{totalRegisterCentral}</h1>
+                  <h1 className="text-white  text-3xl">
+                    {totalRegisterCentral}
+                  </h1>
                   <h6 className="mulishLight text-white text-xs">
                     Registros totales
                   </h6>
@@ -189,9 +203,9 @@ export const Monitor = () => {
                 Porcentaje de coincidencia
               </h1>
               <div className="w-full flex justify-center ">
-                <PieChart 
-                  goodPercentage = {truePercentage}
-                  badPercentage = {badPercentage}
+                <PieChart
+                  goodPercentage={truePercentage}
+                  badPercentage={badPercentage}
                 />
               </div>
               <p className="text-xs text-gray-700 m-2 text-center">
