@@ -80,7 +80,7 @@ export const Monitor = () => {
   //   }
   // }, [socketTiendas])
   const getcountInfo = async () => {
-    const { data } = await SDKZeus.getCountInfo(199);
+    const { data } = await SDKZeus.getCountInfo(id);
     setCentral(data.data.countCentral);
     setPosLocal(data.data.countTienda);
   };
