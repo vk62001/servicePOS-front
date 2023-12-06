@@ -1,24 +1,30 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Card } from "../../components/Card";
-import { Button } from '../../components/Button'
-import { faBullhorn, faEye, faRecycle } from "@fortawesome/free-solid-svg-icons";
+import { Button } from "../../components/Button";
+import {
+  faBullhorn,
+  faEye,
+  faRecycle,
+} from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { getCentralTables } from "../../store/data";
 import { useNavigate, useParams } from "react-router-dom";
 import { SocketContext } from "../../context/SocketContext";
 import { CardData } from "../../components/CardData";
 import { PieChart } from "../../components/PieChart";
+import { APISQZeus } from "../../SDK/instanceZeuz";
+import { SDKZeus } from "../../SDK/SDKZeus";
 
 export const Monitor = () => {
   const { socketApp } = useContext(SocketContext); //este es el socket para conectarnos
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { centralTables, socketTiendas } = useSelector(state => state.dataSlice);
-  const [central, setCentral] = useState([])
+  const { centralTables, socketTiendas } = useSelector(
+    (state) => state.dataSlice
+  );
+  const [central, setCentral] = useState([]);
   const [posLocal, setPosLocal] = useState([]);
 
-
-  
   // useEffect(() => {
   //   dispatch(getCentralTables(id));
   //   //peticion por sockets
@@ -36,9 +42,8 @@ export const Monitor = () => {
       newArray.push({
         tableName: key,
         count: centralTables[key],
-
       });
-    };
+    }
     setCentral(newArray);
   };
 
@@ -47,20 +52,20 @@ export const Monitor = () => {
     for (const key in data) {
       newArray.push({
         tableName: key,
-        count: data[key]
+        count: data[key],
       });
     }
     setPosLocal(newArray);
   };
 
   const filterSocketTienda = () => {
-    return socketTiendas.filter(e => e.tienda === id);
+    return socketTiendas.filter((e) => e.tienda === id);
   };
 
   // useEffect(() => {
   //     if(Object.keys(socketTiendas).length>0){
   //       const sockeTiendaId = filterSocketTienda();
-  //       console.log(sockeTiendaId)  
+  //       console.log(sockeTiendaId)
   //       const objSockets = {
   //           monitorId: socketApp.current.id,
   //           socketTiendaId: sockeTiendaId[0].id
@@ -74,220 +79,140 @@ export const Monitor = () => {
 
   //   }
   // }, [socketTiendas])
-
+  const getcountInfo = async () => {
+    const { data } = await SDKZeus.getCountInfo(199);
+    setCentral(data.data.countCentral);
+    setPosLocal(data.data.countTienda);
+  };
+  useEffect(() => {
+    getcountInfo();
+    return () => {};
+  }, []);
 
   const renderCentral = () => {
     if (Object.keys(central).length === 0) return;
-    return central.map((e) => {
-      return (
-        <tr className="bg-white border-b" key={e.tableName}>
-          <th
-            scope="row"
-            className="px-2 py-1 text-xs text-gray-900 whitespace-nowrap "
-          >
-            {e.tableName}
-          </th>
-          <td className="px-2 py-1 text-xs text-center">{e.count}</td>
-        </tr>
-      )
-    })
-  }
+    return Object.entries(central).map(([key, value]) => (
+      <tr className="border-b border-gray-200" key={key}>
+        <th className="text-center py-1">{key.toUpperCase()}</th>
+        <td className="text-center py-1">{value}</td>
+      </tr>
+    ));
+  };
 
   const renderPOSLocal = () => {
     if (Object.keys(posLocal).length === 0) return;
-    return posLocal.map((e) => {
-      return (
-        <tr className="bg-white border-b" key={e.tableName}>
-          <th
-            scope="row"
-            className="px-2 py-1 text-xs text-gray-900 whitespace-nowrap "
-          >
-            {e.tableName}
-          </th>
-          <td className="px-2 py-1 text-xs text-center">{e.count}</td>
-        </tr>
-      )
-    })
-  }
+    return Object.entries(posLocal).map(([key, value]) => (
+      <tr className="border-b border-gray-200" key={key}>
+        <th className="text-center py-1">{key.toUpperCase()}</th>
+        <td className="text-center py-1">{value}</td>
+      </tr>
+    ));
+  };
 
   return (
     <div className="mulishRegular bg-gray-100 flex flex-col justify-start h-full">
       <div className="flex flex-col pt-2 justify-start w-full h-screen">
         <div className="w-full flex mt-24">
           <div className="w-7/12">
-        <Card
-          title={`Tienda: Alamos`}
-          className=" justify-center mx-auto lg:w-11/12 md:w-11/12 bg-white h-96"
-          classTitle="p-4 mulishBold text-sqgreen-900 text-2xl"
-          classBody={'flex flex-wrap justify-around'}
-        >
-          <div className=" flex w-10/12 mx-0 items-center justify-between py-10 ">
-            <CardData
-              className={" flex justify-center items-center text-center"}
+            <Card
+              title={`Tienda: Alamos`}
+              className=" justify-center mx-auto lg:w-11/12 md:w-11/12 bg-white h-96"
+              classTitle="p-4 mulishBold text-sqgreen-900 text-2xl"
+              classBody={"flex flex-wrap justify-around"}
             >
-              <h4 className="text-white  text-sm">Diagnostico central</h4>
-              <h1 className="text-white  text-3xl">98%</h1>
-              <h6 className="mulishLight text-white text-xs">Diagnostico central</h6>
-            </CardData>
-            <CardData
-              className={" flex justify-center items-center text-center"}
-            >
-              <h4 className="text-white  text-sm">Diagnostico central</h4>
-              <h1 className="text-white  text-3xl">98%</h1>
-              <h6 className="mulishLight text-white text-xs">Diagnostico central</h6>
-            </CardData>
+              <div className=" flex w-10/12 mx-0 items-center justify-between py-10 ">
+                <CardData
+                  className={" flex justify-center items-center text-center"}
+                >
+                  <h4 className="text-white  text-sm">Diagnostico central</h4>
+                  <h1 className="text-white  text-3xl">98%</h1>
+                  <h6 className="mulishLight text-white text-xs">
+                    Diagnostico central
+                  </h6>
+                </CardData>
+                <CardData
+                  className={" flex justify-center items-center text-center"}
+                >
+                  <h4 className="text-white  text-sm">Diagnostico central</h4>
+                  <h1 className="text-white  text-3xl">98%</h1>
+                  <h6 className="mulishLight text-white text-xs">
+                    Diagnostico central
+                  </h6>
+                </CardData>
+              </div>
+              <p className="text-center">
+                Los datos se muestran en tiempo real
+              </p>
+            </Card>
           </div>
-          <p className="text-center">Los datos se muestran en tiempo real</p>
-        </Card>
-        </div>
-        <div className="w-4/12 flex justiy-center">
-          <Card
-            title={"Coincidencias"}
-            className={"bg-white"}
-            classTitle="text-sqgreen-900 p-2"
-            classBody={"w-full flex justify-center flex-col pb-2"}
-          >
-            <h1 className="mulishRegular text-center w-full text-1xl text-sqgreen-900">Porcentaje de coincidencia</h1>
-            <div className="w-full flex justify-center ">
-              <PieChart />
-            </div>
-            <p className="text-xs text-gray-700 m-2 text-center">Si los datos entre Central y POS tienen una diferencia de más del 10% favor de reportarlo</p>
-            <div className="w-full flex justify-center items-center">
-              <Button 
-                title={"Reportar"}
-                className={"bg-sqgreen-900 text-white md:w-40"}
-              />
-            </div>
-          </Card>
-        </div>
+          <div className="w-4/12 flex justiy-center">
+            <Card
+              title={"Coincidencias"}
+              className={"bg-white"}
+              classTitle="text-sqgreen-900 p-2"
+              classBody={"w-full flex justify-center flex-col pb-2"}
+            >
+              <h1 className="mulishRegular text-center w-full text-1xl text-sqgreen-900">
+                Porcentaje de coincidencia
+              </h1>
+              <div className="w-full flex justify-center ">
+                <PieChart />
+              </div>
+              <p className="text-xs text-gray-700 m-2 text-center">
+                Si los datos entre Central y POS tienen una diferencia de más
+                del 10% favor de reportarlo
+              </p>
+              <div className="w-full flex justify-center items-center">
+                <Button
+                  title={"Reportar"}
+                  className={"bg-sqgreen-900 text-white md:w-40"}
+                />
+              </div>
+            </Card>
+          </div>
         </div>
         <Card
           // title={"Data"}
           className={"mx-auto lg:w-11/12 md:w-11/12 mt-10 bg-white"}
           // classTitle="p-4 mulishBold text-sqgreen-900 text-2xl"
           classBody={"flex"}
-          classHR={'hidden'}
+          classHR={"hidden"}
         >
-
           <div className="w-5/12 flex justify-center">
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-2 w-10/12">
-            <h1 className="mulishBold text-sqgreen-900 w-full m-2">POS</h1>
-              <table className="w-full text-xs text-left text-gray-500" >
+              <h1 className="mulishBold text-sqgreen-900 w-full m-2">POS</h1>
+              <table className="w-full text-xs text-left text-gray-500">
                 <thead className="text-xs text-gray-700 bg-gray-100">
                   <tr>
-                    <th
-                      scope="col"
-                      className={"w-1/12 py-3  text-center"}
-                    >
+                    <th scope="col" className={"w-1/12 py-3  text-center"}>
                       Tabla
                     </th>
-                    <th
-                      scope="col"
-                      className={"w-1/12 py-3  text-center"}
-                    >
+                    <th scope="col" className={"w-1/12 py-3  text-center"}>
                       Conteo
                     </th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">ID</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">Source</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">Apertura</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">Historiales</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">Ventas</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">Devoluciones</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">Tickets</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">Remesas</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr>
-                    <td className="text-center py-1">Pedidos</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                </tbody>
+                <tbody>{posLocal && renderPOSLocal()}</tbody>
               </table>
             </div>
           </div>
           <div className="w-5/12 flex justify-center ">
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-2 w-10/12">
-            <h1 className="mulishBold text-sqgreen-900 w-full m-2">CENTRAL</h1>
-              <table className="w-full text-xs text-left text-gray-500" >
+              <h1 className="mulishBold text-sqgreen-900 w-full m-2">
+                CENTRAL
+              </h1>
+              <table className="w-full text-xs text-left text-gray-500">
                 <thead className="text-xs text-gray-700 bg-gray-100">
                   <tr>
-                    <th
-                      scope="col"
-                      className={"w-1/12 py-3  text-center"}
-                    >
+                    <th scope="col" className={"w-1/12 py-3  text-center"}>
                       Tabla
                     </th>
-                    <th
-                      scope="col"
-                      className={"w-1/12 py-3  text-center"}
-                    >
+                    <th scope="col" className={"w-1/12 py-3  text-center"}>
                       Conteo
                     </th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">ID</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">Source</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">Apertura</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">Historiales</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">Ventas</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">Devoluciones</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">Tickets</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="text-center py-1">Remesas</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                  <tr>
-                    <td className="text-center py-1">Pedidos</td>
-                    <td className="text-center py-1">11</td>
-                  </tr>
-                </tbody>
+                <tbody>{central && renderCentral()}</tbody>
               </table>
             </div>
           </div>
