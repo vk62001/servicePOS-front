@@ -14,6 +14,7 @@ import { CardData } from "../../components/CardData";
 import { PieChart } from "../../components/PieChart";
 import { APISQZeus } from "../../SDK/instanceZeuz";
 import { SDKZeus } from "../../SDK/SDKZeus";
+import { LineChart } from "../../components/LineChart";
 
 export const Monitor = () => {
   const { socketApp } = useContext(SocketContext); //este es el socket para conectarnos
@@ -153,29 +154,7 @@ export const Monitor = () => {
               classTitle="p-4 mulishBold text-sqgreen-900 text-2xl"
               classBody={"flex flex-wrap justify-around"}
             >
-              <div className=" flex w-10/12 mx-0 items-center justify-between py-10 ">
-                <CardData
-                  className={" flex justify-center items-center text-center"}
-                >
-                  <h4 className="text-white  text-sm">Diagnostico central</h4>
-                  <h1 className="text-white  text-3xl">{totalRegisterCentral}</h1>
-                  <h6 className="mulishLight text-white text-xs">
-                    Registros totales
-                  </h6>
-                </CardData>
-                <CardData
-                  className={" flex justify-center items-center text-center"}
-                >
-                  <h4 className="text-white  text-sm">Diagnostico POS</h4>
-                  <h1 className="text-white  text-3xl">{totalRegisterPOS}</h1>
-                  <h6 className="mulishLight text-white text-xs">
-                    Registros totales
-                  </h6>
-                </CardData>
-              </div>
-              <p className="text-center">
-                Los datos se muestran en tiempo real
-              </p>
+              <LineChart />
             </Card>
           </div>
           <div className="w-4/12 flex justiy-center">

@@ -35,7 +35,16 @@ export const getCentralTables = (id) => {
         }   
 
     };
-} 
+};
+export const getYesterdayTables = (id) => {
+    return async (dispatch, getState) => {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
+}
 
 export const updatePOSL = (data) => {
     return async(dispatch, getState) => {
@@ -53,3 +62,5 @@ export const updatePOSL = (data) => {
       }
     };
   }
+
+  
