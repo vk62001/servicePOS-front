@@ -4,14 +4,14 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-export const PieChart = () => {
-
+export const PieChart = ({goodPercentage, badPercentage}) => {
+  console.log(goodPercentage, '`', badPercentage)
     const data = {
         labels:"",
         datasets: [
           {
-            label: '# of Votes',
-            data: [12, 19],
+            label: '# Coincidencias',
+            data: [goodPercentage, badPercentage],
             weight:1,
             backgroundColor: [
               '#749B32',

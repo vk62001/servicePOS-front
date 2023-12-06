@@ -24,6 +24,11 @@ export const Monitor = () => {
   );
   const [central, setCentral] = useState([]);
   const [posLocal, setPosLocal] = useState([]);
+  const [truePercentage, setTruePercentage] =  useState(0);
+  const [badPercentage, setBadPercentage] =  useState(0);
+  const [totalRegisterPOS, setTotalRegisterPOS] =  useState(0);
+  const [totalRegisterCentral, setTotalRegisterCentral] = useState(0);
+
 
   // useEffect(() => {
   //   dispatch(getCentralTables(id));
@@ -83,6 +88,34 @@ export const Monitor = () => {
     const { data } = await SDKZeus.getCountInfo(id);
     setCentral(data.data.countCentral);
     setPosLocal(data.data.countTienda);
+    
+    const Central =  data.data.countCentral;
+    const Tienda =  data.data.countTienda;
+    const total =(Object.keys(Central).length) - 2
+    let totalTemp = 0;
+    let totalCentral = 0;
+    let totalPOS = 0;
+    for (const i in Central) {
+        if(i !== 'source' && i !== 'id' ){
+          totalCentral = totalCentral + Central[i];
+          for (const j in Tienda) {
+            if(j !== 'source' && j !== 'id' ){
+                if(j === i) {
+                  if(Central[i] ===  Tienda[j]){
+                    totalTemp+=1;
+                    totalPOS = totalPOS + Tienda[j];
+                  }
+                }
+            }
+          }
+      }
+    }
+    const godPercentage  = (totalTemp *  100) / total; 
+    setTruePercentage(godPercentage);
+    setBadPercentage(100-godPercentage);
+    console.log(totalCentral, '+', totalPOS);
+    setTotalRegisterCentral(totalCentral);
+    setTotalRegisterPOS(totalPOS);
   };
   useEffect(() => {
     getcountInfo();
@@ -125,18 +158,18 @@ export const Monitor = () => {
                   className={" flex justify-center items-center text-center"}
                 >
                   <h4 className="text-white  text-sm">Diagnostico central</h4>
-                  <h1 className="text-white  text-3xl">98%</h1>
+                  <h1 className="text-white  text-3xl">{totalRegisterCentral}</h1>
                   <h6 className="mulishLight text-white text-xs">
-                    Diagnostico central
+                    Registros totales
                   </h6>
                 </CardData>
                 <CardData
                   className={" flex justify-center items-center text-center"}
                 >
-                  <h4 className="text-white  text-sm">Diagnostico central</h4>
-                  <h1 className="text-white  text-3xl">98%</h1>
+                  <h4 className="text-white  text-sm">Diagnostico POS</h4>
+                  <h1 className="text-white  text-3xl">{totalRegisterPOS}</h1>
                   <h6 className="mulishLight text-white text-xs">
-                    Diagnostico central
+                    Registros totales
                   </h6>
                 </CardData>
               </div>
@@ -156,7 +189,10 @@ export const Monitor = () => {
                 Porcentaje de coincidencia
               </h1>
               <div className="w-full flex justify-center ">
-                <PieChart />
+                <PieChart 
+                  goodPercentage = {truePercentage}
+                  badPercentage = {badPercentage}
+                />
               </div>
               <p className="text-xs text-gray-700 m-2 text-center">
                 Si los datos entre Central y POS tienen una diferencia de más
