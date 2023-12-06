@@ -13,4 +13,7 @@ export const SDKZeus = {
   getCountInfo: function (tiendaId) {
     return APISQZeus.get(`api/pos/getCountInfo/${tiendaId}`);
   },
+  getCountDiaAnterior: function (tiendaId) {
+    return APISQZeus.get(`api/pos/getCountDiaAnterior/${tiendaId}`);
+  },
 };
