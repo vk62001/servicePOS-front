@@ -24,7 +24,6 @@ export const dataSlice = createSlice({
       state.authError =  action.payload;
     },
     setTiendas:(state, action) => {
-      console.log(action.payload)
       state.tiendas =  action.payload.tiendas
     },
     setSocketTiendas:(state, action) => {

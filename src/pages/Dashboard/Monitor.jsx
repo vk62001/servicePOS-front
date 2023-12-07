@@ -7,7 +7,7 @@ import {
   faRecycle,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { getCentralTables } from "../../store/data";
+import { getCentralTables, startLoader, stopLoader } from "../../store/data";
 import { useNavigate, useParams } from "react-router-dom";
 import { SocketContext } from "../../context/SocketContext";
 import { CardData } from "../../components/CardData";
@@ -25,11 +25,11 @@ export const Monitor = () => {
   );
   const [central, setCentral] = useState([]);
   const [posLocal, setPosLocal] = useState([]);
-  const [truePercentage, setTruePercentage] =  useState(0);
-  const [badPercentage, setBadPercentage] =  useState(0);
-  const [totalRegisterPOS, setTotalRegisterPOS] =  useState(0);
+  const [truePercentage, setTruePercentage] = useState(0);
+  const [badPercentage, setBadPercentage] = useState(0);
+  const [totalRegisterPOS, setTotalRegisterPOS] = useState(0);
   const [totalRegisterCentral, setTotalRegisterCentral] = useState(0);
-
+  const [dataYesterday, setDataYesterday] = useState([]);
 
   // useEffect(() => {
   //   dispatch(getCentralTables(id));
@@ -86,40 +86,56 @@ export const Monitor = () => {
   //   }
   // }, [socketTiendas])
   const getcountInfo = async () => {
-    const { data } = await SDKZeus.getCountInfo(id);
-    setCentral(data.data.countCentral);
-    setPosLocal(data.data.countTienda);
-    
-    const Central =  data.data.countCentral;
-    const Tienda =  data.data.countTienda;
-    const total =(Object.keys(Central).length) - 2
-    let totalTemp = 0;
-    let totalCentral = 0;
-    let totalPOS = 0;
-    for (const i in Central) {
-        if(i !== 'source' && i !== 'id' ){
+    try {
+      await dispatch(startLoader());
+      const { data } = await SDKZeus.getCountInfo(id);
+      setCentral(data.data.countCentral);
+      setPosLocal(data.data.countTienda);
+
+      const Central = data.data.countCentral;
+      const Tienda = data.data.countTienda;
+      const total = Object.keys(Central).length - 2;
+      let totalTemp = 0;
+      let totalCentral = 0;
+      let totalPOS = 0;
+      for (const i in Central) {
+        if (i !== "source" && i !== "id") {
           totalCentral = totalCentral + Central[i];
           for (const j in Tienda) {
-            if(j !== 'source' && j !== 'id' ){
-                if(j === i) {
-                  if(Central[i] ===  Tienda[j]){
-                    totalTemp+=1;
-                    totalPOS = totalPOS + Tienda[j];
-                  }
+            if (j !== "source" && j !== "id") {
+              if (j === i) {
+                if (Central[i] === Tienda[j]) {
+                  totalTemp += 1;
+                  totalPOS = totalPOS + Tienda[j];
                 }
+              }
             }
           }
+        }
       }
+      const godPercentage = (totalTemp * 100) / total;
+      setTruePercentage(godPercentage);
+      setBadPercentage(100 - godPercentage);
+      console.log(totalCentral, "+", totalPOS);
+      setTotalRegisterCentral(totalCentral);
+      setTotalRegisterPOS(totalPOS);
+    } catch (err) {
+      console.log(err);
     }
-    const godPercentage  = (totalTemp *  100) / total; 
-    setTruePercentage(godPercentage);
-    setBadPercentage(100-godPercentage);
-    console.log(totalCentral, '+', totalPOS);
-    setTotalRegisterCentral(totalCentral);
-    setTotalRegisterPOS(totalPOS);
+    await dispatch(stopLoader())
+  };
+  const getCountInfoYesterday = async () => {
+    try {
+      const { data } = await SDKZeus.getCountYesterday(id);
+      console.log(data.data, "datos dia anterior");
+      setDataYesterday(data.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     getcountInfo();
+    getCountInfoYesterday();
     return () => {};
   }, []);
 
@@ -154,7 +170,11 @@ export const Monitor = () => {
               classTitle="p-4 mulishBold text-sqgreen-900 text-2xl"
               classBody={"flex flex-wrap justify-around"}
             >
-              <LineChart />
+              <div className="w-full">
+                <LineChart 
+                  dataYesterday = {dataYesterday}
+                />
+              </div>
             </Card>
           </div>
           <div className="w-4/12 flex justiy-center">
@@ -168,9 +188,9 @@ export const Monitor = () => {
                 Porcentaje de coincidencia
               </h1>
               <div className="w-full flex justify-center ">
-                <PieChart 
-                  goodPercentage = {truePercentage}
-                  badPercentage = {badPercentage}
+                <PieChart
+                  goodPercentage={truePercentage}
+                  badPercentage={badPercentage}
                 />
               </div>
               <p className="text-xs text-gray-700 m-2 text-center">
