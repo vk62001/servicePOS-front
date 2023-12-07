@@ -14,6 +14,6 @@ export const SDKZeus = {
     return APISQZeus.get(`api/pos/getCountInfo/${tiendaId}`);
   },
   getCountYesterday: function (tiendaId) {
-    return APISQZeus.get(`api/pos/getCountDiaAnterior/${tiendaId}`);
+    return APISQZeus.get(`api/pos/getCountYesterday/${tiendaId}`);
   },
 };

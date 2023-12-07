@@ -128,7 +128,7 @@ export const Monitor = () => {
     try {
       const { data } = await SDKZeus.getCountYesterday(id);
       console.log(data.data, "datos dia anterior");
-      setDataYesterday(data.data);
+      setDataYesterday(data.data[0]);
     } catch (err) {
       console.log(err);
     }
