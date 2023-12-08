@@ -2,7 +2,7 @@ import React, {  useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Card } from '../../components/Card'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch, faShop} from '@fortawesome/free-solid-svg-icons'
+import { faCheckCircle, faExclamationCircle, faSearch, faShop, faTriangleExclamation} from '@fortawesome/free-solid-svg-icons'
 import 'leaflet/dist/leaflet.css'
 import BardCode from '../../assets/images/barCode.png';
 import { LinkCard } from '../../components/LinkCard'
@@ -12,7 +12,7 @@ import { RadioSearchPos } from '../../components/RadioSearchPos'
 export const Pos = () => {
 
   const { tiendas } = useSelector((state) => state.dataSlice);
-
+  // console.log(tiendas);
   const [textTienda, setTextTienda] = useState('');
   const [tempTiendas, setTempTiendas] = useState([]);
   const [selectRadio, setSelectRadio] = useState('todos')
@@ -90,8 +90,8 @@ useEffect(() => {
         >
 
           <div className='flex items-center'>
-            <div className='w-6/12'>
-              <img src={BardCode} />
+            <div className='w-6/12 text-center'>
+              <FontAwesomeIcon icon={e.warning ? faExclamationCircle : faCheckCircle} className={`${e.warning ? 'text-gold-500':'text-sqgreen-900'} text-2xl`}/>
             </div>
             <div className={`w-6/12 tex-xs mulishBold  ${e.connected ? 'text-sqgreen-900' : 'text-red-600'}`}>
               <p className='text-small'>ID {e.clave} </p>

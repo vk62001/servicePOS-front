@@ -7,4 +7,4 @@ export const delay = (ms) => {
 export const playAlertSound = () => {
     const audio =  new Audio(NotificationSound);
     audio.play();
-}
+};

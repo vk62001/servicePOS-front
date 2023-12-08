@@ -37,9 +37,6 @@ import {
     },
   };
   
-  const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-  console.log(labels);
-  
 
   export const LineChart = ({dataYesterday}) => {
 

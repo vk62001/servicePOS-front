@@ -70,7 +70,7 @@ const DashboardNavigation = () => {
         };
       });
       //dispatch
-      dispatch(setCountDisconnect({countDisconnected: num}));
+      
       updatePOS(result);
     }
   }

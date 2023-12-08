@@ -23,6 +23,7 @@ export const Monitor = () => {
   const { centralTables, socketTiendas } = useSelector(
     (state) => state.dataSlice
   );
+  
   const [central, setCentral] = useState([]);
   const [posLocal, setPosLocal] = useState([]);
   const [truePercentage, setTruePercentage] = useState(0);
