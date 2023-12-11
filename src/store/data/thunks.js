@@ -15,7 +15,7 @@ export const getAllPOS = () => {
     try {
       const { data } = await SDKZeus.getAllPOS();
       dispatch(setTiendas({ tiendas: data.data }));
-      if (data.data.datas.length > 0) {
+      if (data.data.length > 0) {
         dispatch(setFlagTiendas({ flagTiendas: true }));
       }
       await dispatch(stopLoader());
