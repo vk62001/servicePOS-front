@@ -3,7 +3,7 @@ import { SocketContext } from './SocketContext';
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
 import { getCentralLogConnection, setServerDisconnected, setSocketTiendas } from '../store/data';
-import { delay, playAlertSound } from '../utils/utils';
+import { playAlertSound, playEmergencySound } from '../utils/utils';
 
 
 export const SocketProvider = ({children}) => {
@@ -42,8 +42,8 @@ export const SocketProvider = ({children}) => {
 
         socketApp.current.on('disconnect', (reason)=>{
           console.log('desconectado: ', reason);
-          alert('Provemas con el servidor de sockets')
           dispatch(setServerDisconnected({serverDisconnected:true}))
+          playEmergencySound();
         });
 
         socketApp.current.on('roomUsers', e=>{
