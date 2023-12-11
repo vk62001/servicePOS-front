@@ -10,7 +10,8 @@ const initialState = {
   centralTables: [],
   flagTiendas : false,
   countDisconnected: 0,
-  logConnection:[]
+  logConnection:[],
+  serverDisconnected:false
 }
 
 export const dataSlice = createSlice({
@@ -46,6 +47,9 @@ export const dataSlice = createSlice({
     },
     setLogConnection : (state, action) =>{
       state.logConnection = action.payload
+    },
+    setServerDisconnected: (state, action) => {
+      state.serverDisconnected =  action.payload.serverDisconnected
     }
   },
 })
@@ -62,5 +66,6 @@ export const {
   setFlagTiendas,
   setCountDisconnect,
   setLogConnection,
+  setServerDisconnected
 } = dataSlice.actions
 

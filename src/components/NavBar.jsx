@@ -10,14 +10,14 @@ import { Notifications } from './Notifications';
 
 export const NavBar = () => {
 
-  const {user, countDisconnected, logConnection} = useSelector(state=>state.dataSlice);
+  const {user, countDisconnected, logConnection, serverDisconnected} = useSelector(state=>state.dataSlice);
   const [showNotifications, setShowNotifications] = useState(false);
   const [menuClose, setMenuClose] = useState(false);
 
   let activeClassName = "border-b-4 border-gold-500 pb-6";
   let noActiveClassName =  'border-0'
   return (
-    <div className='mulishRegular w-full fixed bg-sqgreen-900 py-4 flex justify-between items-center rounded-br-3xl rounded-bl-3xl z-10'>
+    <div className={`mulishRegular w-full fixed ${!serverDisconnected ? 'bg-sqgreen-900':'bg-red-500' }  py-4 flex justify-between items-center rounded-br-3xl rounded-bl-3xl z-10'`}>
       <div className='logoandmenu flex justify-center items-center mx-10'>
         <div className='log'>
           <img src={Logo} width="139px"/>

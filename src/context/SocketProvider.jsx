@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { SocketContext } from './SocketContext';
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
-import { getCentralLogConnection, setSocketTiendas } from '../store/data';
+import { getCentralLogConnection, setServerDisconnected, setSocketTiendas } from '../store/data';
 import { delay, playAlertSound } from '../utils/utils';
 
 
@@ -21,29 +21,41 @@ export const SocketProvider = ({children}) => {
           upgrade: false,
           query:{
             tienda: 1,
-            room:'kernel'
+            room:'kernel',
+            pos:false
           }
         });
       
         socketApp.current = socket;
         socketApp.current.on('connect', ()=>{
           console.log('connect');
+          dispatch(setServerDisconnected({serverDisconnected:false}))
         });
-        socketApp.current.on('disconnect', ()=>{
-          console.log('desconectado');
+
+        socket.io.on("reconnection_attempt", () => {
+          // {
+          // query:{
+          //   tienda: 1,
+          //   room:'kernel'
+          // }
+        });
+
+        socketApp.current.on('disconnect', (reason)=>{
+          console.log('desconectado: ', reason);
+          alert('Provemas con el servidor de sockets')
+          dispatch(setServerDisconnected({serverDisconnected:true}))
         });
 
         socketApp.current.on('roomUsers', e=>{
-          console.log(e.tiendas, '37 sockerProvider');
-          const tiendasTemp = e.tiendas ?  e.tiendas.length :  0;
+          console.log(e.tiendas)
+          const dataTemp =  e.tiendas.filter(tienda => tienda.tienda !=='1');
+          const tiendasTemp = dataTemp.length ?  e.tiendas.length :  0;
           if(tiendasTemp > counterConecctions.current){
-            counterConecctions.current =  tiendasTemp;
+            counterConecctions.current =  dataTemp;
           }else{
             playAlertSound();
             dispatch(getCentralLogConnection());
             counterConecctions.current =  tiendasTemp;
-
-
           }
           dispatch(setSocketTiendas({socketTiendas:e.tiendas}));
 
