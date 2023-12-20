@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { getCentralTables, startLoader, stopLoader } from "../../store/data";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { SocketContext } from "../../context/SocketContext";
 import { CardData } from "../../components/CardData";
 import { PieChart } from "../../components/PieChart";
@@ -19,11 +19,12 @@ import { LineChart } from "../../components/LineChart";
 export const Monitor = () => {
   const { socketApp } = useContext(SocketContext); //este es el socket para conectarnos
   const { id } = useParams();
+  const { state } = useLocation();
   const dispatch = useDispatch();
   const { centralTables, socketTiendas } = useSelector(
     (state) => state.dataSlice
   );
-  
+
   const [central, setCentral] = useState([]);
   const [posLocal, setPosLocal] = useState([]);
   const [truePercentage, setTruePercentage] = useState(0);
@@ -90,30 +91,26 @@ export const Monitor = () => {
     try {
       await dispatch(startLoader());
       const { data } = await SDKZeus.getCountInfo(id);
-      setCentral(data.data.countCentral);
-      setPosLocal(data.data.countTienda);
+      setCentral(data.data);
+      // setPosLocal(data.data.countTienda);
 
-      const Central = data.data.countCentral;
+      const Central = data.data;
       const Tienda = data.data.countTienda;
       const total = Object.keys(Central).length - 2;
       let totalTemp = 0;
       let totalCentral = 0;
       let totalPOS = 0;
       for (const i in Central) {
-        if (i !== "source" && i !== "id") {
-          totalCentral = totalCentral + Central[i];
-          for (const j in Tienda) {
-            if (j !== "source" && j !== "id") {
-              if (j === i) {
-                if (Central[i] === Tienda[j]) {
-                  totalTemp += 1;
-                  totalPOS = totalPOS + Tienda[j];
-                }
-              }
-            }
+        if (i !== "Count" && i !== "id") {
+          console.log(Central[i].Tienda, "row----");
+          totalCentral = totalCentral + Central[i].Central;
+          if (Central[i].Central === Central[i].Tienda) {
+            totalTemp += 1;
           }
+          totalPOS = totalPOS + Central[i].Tienda;
         }
       }
+      console.log(total, totalTemp, totalCentral, totalPOS);
       const godPercentage = (totalTemp * 100) / total;
       setTruePercentage(godPercentage);
       setBadPercentage(100 - godPercentage);
@@ -123,7 +120,7 @@ export const Monitor = () => {
     } catch (err) {
       console.log(err);
     }
-    await dispatch(stopLoader())
+    await dispatch(stopLoader());
   };
   const getCountInfoYesterday = async () => {
     try {
@@ -140,24 +137,23 @@ export const Monitor = () => {
     return () => {};
   }, []);
 
-  const renderCentral = () => {
-    if (Object.keys(central).length === 0) return;
-    return Object.entries(central).map(([key, value]) => (
-      <tr className="border-b border-gray-200" key={key}>
-        <th className="text-center py-1">{key.toUpperCase()}</th>
-        <td className="text-center py-1">{value}</td>
-      </tr>
-    ));
-  };
 
-  const renderPOSLocal = () => {
-    if (Object.keys(posLocal).length === 0) return;
-    return Object.entries(posLocal).map(([key, value]) => (
-      <tr className="border-b border-gray-200" key={key}>
-        <th className="text-center py-1">{key.toUpperCase()}</th>
-        <td className="text-center py-1">{value}</td>
-      </tr>
-    ));
+
+  const renderDataCount = () => {
+    if (Object.keys(central).length === 0) return;
+    return Object.entries(central).map(([key, value]) => {
+      if (key !== "Count" && key !== "id") {
+        const bgColor =
+          value.Central === value.Tienda ? "" : "bg-[#E30609] text-white";
+        return (
+          <tr className={"border-b border-gray-200  " + bgColor} key={key}>
+            <th className="text-center py-1">{key.toUpperCase()}</th>
+            <td className="text-center py-1">{value.Central}</td>
+            <td className="text-center py-1">{value.Tienda}</td>
+          </tr>
+        );
+      }
+    });
   };
 
   return (
@@ -166,15 +162,13 @@ export const Monitor = () => {
         <div className="w-full flex mt-24">
           <div className="w-7/12">
             <Card
-              title={`Tienda: Alamos`}
+              title={`Tienda: ${state}`}
               className=" justify-center mx-auto lg:w-11/12 md:w-11/12 bg-white h-96"
               classTitle="p-4 mulishBold text-sqgreen-900 text-2xl"
               classBody={"flex flex-wrap justify-around"}
             >
               <div className="w-full">
-                <LineChart 
-                  dataYesterday = {dataYesterday}
-                />
+                <LineChart dataYesterday={dataYesterday} />
               </div>
             </Card>
           </div>
@@ -214,28 +208,10 @@ export const Monitor = () => {
           classBody={"flex"}
           classHR={"hidden"}
         >
-          <div className="w-5/12 flex justify-center">
+          <div className="w-10/12 flex justify-center">
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-2 w-10/12">
-              <h1 className="mulishBold text-sqgreen-900 w-full m-2">POS</h1>
-              <table className="w-full text-xs text-left text-gray-500">
-                <thead className="text-xs text-gray-700 bg-gray-100">
-                  <tr>
-                    <th scope="col" className={"w-1/12 py-3  text-center"}>
-                      Tabla
-                    </th>
-                    <th scope="col" className={"w-1/12 py-3  text-center"}>
-                      Conteo
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>{posLocal && renderPOSLocal()}</tbody>
-              </table>
-            </div>
-          </div>
-          <div className="w-5/12 flex justify-center ">
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-2 w-10/12">
-              <h1 className="mulishBold text-sqgreen-900 w-full m-2">
-                CENTRAL
+              <h1 className="mulishBold text-sqgreen-900 w-full m-2 text-center">
+                DATOS ACTUALES
               </h1>
               <table className="w-full text-xs text-left text-gray-500">
                 <thead className="text-xs text-gray-700 bg-gray-100">
@@ -244,11 +220,14 @@ export const Monitor = () => {
                       Tabla
                     </th>
                     <th scope="col" className={"w-1/12 py-3  text-center"}>
-                      Conteo
+                      CENTRAL
+                    </th>
+                    <th scope="col" className={"w-1/12 py-3  text-center"}>
+                      TIENDA
                     </th>
                   </tr>
                 </thead>
-                <tbody>{central && renderCentral()}</tbody>
+                <tbody>{central && renderDataCount()}</tbody>
               </table>
             </div>
           </div>

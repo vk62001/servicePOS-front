@@ -15,7 +15,7 @@ export const Pos = () => {
   // console.log(tiendas);
   const [textTienda, setTextTienda] = useState('');
   const [tempTiendas, setTempTiendas] = useState([]);
-  const [selectRadio, setSelectRadio] = useState('todos')
+  const [selectRadio, setSelectRadio] = useState('conectados')
 
   const filter = (text) => {
     setTextTienda(text);
@@ -85,6 +85,7 @@ useEffect(() => {
       return (
         <LinkCard
           to={`/monitor/${e.id}`}
+          descripcion={e.descripcion}
           key={e.id}
           className={` cardShadow p-4 text-small cursor-pointer text-gray-700 sm:w-52 md:w-52 ml-6 mt-4  bg-white`}
         >
