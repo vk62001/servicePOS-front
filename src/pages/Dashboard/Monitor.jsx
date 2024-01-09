@@ -70,30 +70,49 @@ export const Monitor = () => {
     return socketTiendas.filter((e) => e.tienda === id);
   };
 
-  // useEffect(() => {
-  //     if(Object.keys(socketTiendas).length>0){
-  //       const sockeTiendaId = filterSocketTienda();
-  //       console.log(sockeTiendaId)
-  //       const objSockets = {
-  //           monitorId: socketApp.current.id,
-  //           socketTiendaId: sockeTiendaId[0].id
-  //         }
-  //       socketApp.current.emit('getCountRegistros', objSockets);
-  //       socketApp.current.on('setCountRegistros', data=>{
-  //           showPOS(data);
-  //       })
-  //     }
-  //   return () => {
+  useEffect(() => {
+    if (Object.keys(socketTiendas).length > 0) {
+      const sockeTiendaId = filterSocketTienda();
+      console.log(sockeTiendaId);
+      const objSockets = {
+        // monitorId: socketApp.current.id,
+        socketTiendaId: sockeTiendaId[0].id,
+        tiendaId: sockeTiendaId[0].tienda,
+      };
+      console.log(socketApp, sockeTiendaId, "datos de socket");
+      socketApp.current.emit("getCountRegistros", objSockets); //Se emite el evento hacia serverPOs-Central
+      socketApp.current.on("setCountRegistros", (data) => {
+        // Recibe informacion de serverPOs-Central
+        // showPOS(data);
+        getcountInfo(data);
+      });
 
-  //   }
-  // }, [socketTiendas])
-  const getcountInfo = async () => {
+      getExistenciasTienda();
+    }
+    return () => {};
+  }, [socketTiendas]);
+
+  const getExistenciasTienda = () => {
+    if (Object.keys(socketTiendas.filter((e) => e.tiendaId != 1)).length > 0) {
+      const sockeTiendaId = filterSocketTienda();
+      const objSockets = {
+        socketTiendaId: sockeTiendaId[0].id,
+        tiendaId: sockeTiendaId[0].tienda,
+      };
+      socketApp.current.emit("getExistencias", objSockets); //Se emite el evento hacia serverPOs-Central
+      socketApp.current.on("setExistencias", (data) => {
+        console.log(data.data, "Existencias Tienda");
+      });
+    }
+  };
+
+  const getcountInfo = async (data) => {
     try {
       await dispatch(startLoader());
-      const { data } = await SDKZeus.getCountInfo(id);
+      //const { data } = await SDKZeus.getCountInfo(id);
+      console.log(data.data, "Datos de hoy");
       setCentral(data.data);
       // setPosLocal(data.data.countTienda);
-
       const Central = data.data;
       const Tienda = data.data.countTienda;
       const total = Object.keys(Central).length - 2;
@@ -122,6 +141,7 @@ export const Monitor = () => {
     }
     await dispatch(stopLoader());
   };
+
   const getCountInfoYesterday = async () => {
     try {
       const { data } = await SDKZeus.getCountYesterday(id);
@@ -131,13 +151,12 @@ export const Monitor = () => {
       console.log(err);
     }
   };
+
   useEffect(() => {
-    getcountInfo();
+    // getcountInfo();
     getCountInfoYesterday();
     return () => {};
   }, []);
-
-
 
   const renderDataCount = () => {
     if (Object.keys(central).length === 0) return;
