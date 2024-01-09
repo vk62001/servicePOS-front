@@ -71,6 +71,8 @@ export const Monitor = () => {
   };
 
   useEffect(() => {
+    getExistenciasTienda();
+    getExistenciasCentral();
     if (Object.keys(socketTiendas).length > 0) {
       const sockeTiendaId = filterSocketTienda();
       console.log(sockeTiendaId);
@@ -81,13 +83,11 @@ export const Monitor = () => {
       };
       console.log(socketApp, sockeTiendaId, "datos de socket");
       socketApp.current.emit("getCountRegistros", objSockets); //Se emite el evento hacia serverPOs-Central
-      socketApp.current.on("setCountRegistros", (data) => {
+      socketApp.current.on("setCountRegistros", async (data) => {
         // Recibe informacion de serverPOs-Central
         // showPOS(data);
-        getcountInfo(data);
+        await getcountInfo(data);
       });
-
-      getExistenciasTienda();
     }
     return () => {};
   }, [socketTiendas]);
@@ -95,10 +95,12 @@ export const Monitor = () => {
   const getExistenciasTienda = () => {
     if (Object.keys(socketTiendas.filter((e) => e.tiendaId != 1)).length > 0) {
       const sockeTiendaId = filterSocketTienda();
+      console.log(sockeTiendaId, "sockeTiendaId");
       const objSockets = {
         socketTiendaId: sockeTiendaId[0].id,
         tiendaId: sockeTiendaId[0].tienda,
       };
+      console.log(objSockets, "objSockets");
       socketApp.current.emit("getExistencias", objSockets); //Se emite el evento hacia serverPOs-Central
       socketApp.current.on("setExistencias", (data) => {
         console.log(data.data, "Existencias Tienda ");
@@ -106,6 +108,20 @@ export const Monitor = () => {
     }
   };
 
+  const getExistenciasCentral = () => {
+    if (Object.keys(socketTiendas.filter((e) => e.tiendaId != 1)).length > 0) {
+      const sockeTiendaId = filterSocketTienda();
+      console.log(sockeTiendaId, "sockeTiendaId");
+      const objSockets = {
+        tiendaId: sockeTiendaId[0].tienda,
+      };
+      console.log(objSockets, "objSockets");
+      socketApp.current.emit("getExistenciasCentral", objSockets); //Se emite el evento hacia serverPOs-Central
+      socketApp.current.on("setExistenciasCentral", (data) => {
+        console.log(data.data, "Existencias Central");
+      });
+    }
+  };
   const getcountInfo = async (data) => {
     try {
       await dispatch(startLoader());
