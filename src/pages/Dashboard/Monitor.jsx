@@ -101,7 +101,7 @@ export const Monitor = () => {
       };
       socketApp.current.emit("getExistencias", objSockets); //Se emite el evento hacia serverPOs-Central
       socketApp.current.on("setExistencias", (data) => {
-        console.log(data.data, "Existencias Tienda");
+        console.log(data.data, "Existencias Tienda ");
       });
     }
   };
