@@ -47,7 +47,7 @@ export const SocketProvider = ({children}) => {
         });
 
         socketApp.current.on('roomUsers', e=>{
-          console.log(e.tiendas)
+          // console.log(e.tiendas)
           const dataTemp =  e.tiendas.filter(tienda => tienda.tienda !=='1');
           const tiendasTemp = dataTemp.length ? dataTemp.length :  0;
           if(tiendasTemp > counterConecctions.current){

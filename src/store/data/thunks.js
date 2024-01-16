@@ -56,7 +56,6 @@ export const getCentralLogConnection = () => {
   return async (dispatch, getState) => {
     try {
       const { data } = await SDKZeus.getLogConnection();
-      console.log(data.data.length, "75");
       await dispatch(setLogConnection(data.data));
       dispatch(setCountDisconnect({ countDisconnected: data.data.length }));
     } catch (err) {

@@ -15,6 +15,7 @@ import { PieChart } from "../../components/PieChart";
 import { APISQZeus } from "../../SDK/instanceZeuz";
 import { SDKZeus } from "../../SDK/SDKZeus";
 import { LineChart } from "../../components/LineChart";
+import { Modal } from "../../components/Modal";
 
 export const Monitor = () => {
   const { socketApp } = useContext(SocketContext); //este es el socket para conectarnos
@@ -32,6 +33,8 @@ export const Monitor = () => {
   const [totalRegisterPOS, setTotalRegisterPOS] = useState(0);
   const [totalRegisterCentral, setTotalRegisterCentral] = useState(0);
   const [dataYesterday, setDataYesterday] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [dataPOS, setDataPOS] = useState([])
 
   // useEffect(() => {
   //   dispatch(getCentralTables(id));
@@ -70,32 +73,28 @@ export const Monitor = () => {
     return socketTiendas.filter((e) => e.tienda === id);
   };
 
-  useEffect(() => {
-    getExistenciasTienda();
-    getExistenciasCentral();
-    if (Object.keys(socketTiendas).length > 0) {
-      const sockeTiendaId = filterSocketTienda();
-      console.log(sockeTiendaId);
-      const objSockets = {
-        // monitorId: socketApp.current.id,
-        socketTiendaId: sockeTiendaId[0].id,
-        tiendaId: sockeTiendaId[0].tienda,
-      };
-      console.log(socketApp, sockeTiendaId, "datos de socket");
-      socketApp.current.emit("getCountRegistros", objSockets); //Se emite el evento hacia serverPOs-Central
-      socketApp.current.on("setCountRegistros", async (data) => {
-        // Recibe informacion de serverPOs-Central
-        // showPOS(data);
-        await getcountInfo(data);
-      });
-    }
-    return () => {};
-  }, [socketTiendas]);
+  const renderInventario = () => {  
+    if(Object.keys(dataPOS).length===0)return;
+    return dataPOS.map((e, i) => {
+      // console.log(e, "e")
+      return (
+        <div key={i} className="flex justify-between items-center">
+          <p className="text-xs text-gray-700">{e.producto_Id}</p>
+          <p className="text-xs text-gray-700">{e.descripcion_larga}</p>
+          <p className="text-xs text-gray-700">{e.existencia}</p>
+        </div>
+      );
+    });
+  };
+
+
 
   const getExistenciasTienda = () => {
     if (Object.keys(socketTiendas.filter((e) => e.tiendaId != 1)).length > 0) {
+
       const sockeTiendaId = filterSocketTienda();
-      console.log(sockeTiendaId, "sockeTiendaId");
+      // console.log(sockeTiendaId, "sockeTiendaId");
+      if(!sockeTiendaId[0].id)return;
       const objSockets = {
         socketTiendaId: sockeTiendaId[0].id,
         tiendaId: sockeTiendaId[0].tienda,
@@ -104,6 +103,7 @@ export const Monitor = () => {
       socketApp.current.emit("getExistencias", objSockets); //Se emite el evento hacia serverPOs-Central
       socketApp.current.on("setExistencias", (data) => {
         console.log(data.data, "Existencias Tienda ");
+          setDataPOS(data.data);
       });
     }
   };
@@ -126,7 +126,7 @@ export const Monitor = () => {
     try {
       await dispatch(startLoader());
       //const { data } = await SDKZeus.getCountInfo(id);
-      console.log(data.data, "Datos de hoy");
+      // console.log(data.data, "Datos de hoy");
       setCentral(data.data);
       // setPosLocal(data.data.countTienda);
       const Central = data.data;
@@ -137,7 +137,7 @@ export const Monitor = () => {
       let totalPOS = 0;
       for (const i in Central) {
         if (i !== "Count" && i !== "id") {
-          console.log(Central[i].Tienda, "row----");
+          // console.log(Central[i].Tienda, "row----");
           totalCentral = totalCentral + Central[i].Central;
           if (Central[i].Central === Central[i].Tienda) {
             totalTemp += 1;
@@ -145,11 +145,11 @@ export const Monitor = () => {
           totalPOS = totalPOS + Central[i].Tienda;
         }
       }
-      console.log(total, totalTemp, totalCentral, totalPOS);
+      // console.log(total, totalTemp, totalCentral, totalPOS);
       const godPercentage = (totalTemp * 100) / total;
       setTruePercentage(godPercentage);
       setBadPercentage(100 - godPercentage);
-      console.log(totalCentral, "+", totalPOS);
+      // console.log(totalCentral, "+", totalPOS);
       setTotalRegisterCentral(totalCentral);
       setTotalRegisterPOS(totalPOS);
     } catch (err) {
@@ -161,7 +161,6 @@ export const Monitor = () => {
   const getCountInfoYesterday = async () => {
     try {
       const { data } = await SDKZeus.getCountYesterday(id);
-      console.log(data.data, "datos dia anterior");
       setDataYesterday(data.data[0]);
     } catch (err) {
       console.log(err);
@@ -173,6 +172,30 @@ export const Monitor = () => {
     getCountInfoYesterday();
     return () => {};
   }, []);
+
+
+  useEffect(() => {
+    getExistenciasTienda();
+    getExistenciasCentral();
+    if (Object.keys(socketTiendas).length > 0) {
+      const sockeTiendaId = filterSocketTienda();
+      console.log(sockeTiendaId);
+      const objSockets = {
+        // monitorId: socketApp.current.id,
+        socketTiendaId: sockeTiendaId[0].id,
+        tiendaId: sockeTiendaId[0].tienda,
+      };
+      console.log(socketApp, sockeTiendaId, "datos de socket");
+      socketApp.current.emit("getCountRegistros", objSockets); //Se emite el evento hacia serverPOs-Central
+      socketApp.current.on("setCountRegistros", async (data) => {
+        // Recibe informacion de serverPOs-Central
+        // showPOS(data);
+        await getcountInfo(data);
+      });
+    }
+    return () => {};
+  }, [socketTiendas]);
+
 
   const renderDataCount = () => {
     if (Object.keys(central).length === 0) return;
@@ -280,12 +303,20 @@ export const Monitor = () => {
                 title=""
                 icon={faBullhorn}
                 className={"bg-sqgreen-900 w-10 rounded"}
+                onClick={() => setShowModal(true)}
               />
               <span className="text-gray-700 text-small">Reportar</span>
             </div>
           </div>
         </Card>
       </div>
+      <Modal 
+        show={showModal} 
+        onClose={() => setShowModal(false)}
+        title={"Inventario"}
+      >
+        {renderInventario()}
+      </Modal>
     </div>
   );
 };

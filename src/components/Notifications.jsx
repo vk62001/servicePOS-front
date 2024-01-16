@@ -8,7 +8,6 @@ export const Notifications = ({className, items}) => {
 const renderItems = () => {
     if(Object.keys(items).lenght===0)return;
     return items.map((e, i)=>{
-        console.log(e)
         if(!e.conected){
         return(
             <div key={i} className="flex border-b-2 border-b-gray-100 mb-2 ">
