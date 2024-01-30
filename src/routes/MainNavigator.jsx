@@ -7,11 +7,28 @@ import { useDispatch, useSelector } from 'react-redux'
 import { NavBar } from '../components/NavBar'
 import { Monitor } from '../pages/Dashboard/Monitor'
 import { Pos } from '../pages/Dashboard/Pos'
-import { setCountDisconnect, updatePOSL } from '../store/data'
+import { setAuth, setCountDisconnect, updatePOSL } from '../store/data'
+import { getCacheString } from '../cache/cache'
 
 export const MainNavigator = () => {
-
+  const dispatch = useDispatch();
   const {auth} = useSelector(state=>state.dataSlice);
+
+
+
+  useEffect(() => {
+
+    const auth =  getCacheString('@userSQK')
+    console.log(auth);
+    if (auth==="true") {
+      dispatch(setAuth(true));
+    }
+
+  return () => {
+    
+  }
+}, [])
+
 
   return (
     <>
@@ -25,8 +42,6 @@ export const MainNavigator = () => {
     </>
   )
 }
-
-
 
 const AuthNavigation = () => {
   return(

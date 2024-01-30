@@ -7,6 +7,8 @@ import {
   startLoader,
   stopLoader,
   setCountDisconnect,
+  setAuthError,
+  setAuth,
 } from "./dataSlice";
 
 export const getAllPOS = () => {
@@ -31,8 +33,8 @@ export const getCentralTables = (id) => {
     dispatch(startLoader());
     try {
       const { data } = await SDKZeus.getAllTables(id);
-      await dispatch(setCentralTables({ centralTables: data.data.data }));
-      await dispatch(stopLoader());
+      dispatch(setCentralTables({ centralTables: data.data.data }));
+     await dispatch(stopLoader());
     } catch (error) {
       console.log(error);
       await dispatch(stopLoader());
@@ -48,7 +50,7 @@ export const getYesterdayTables = (id) => {
 
 export const updatePOSL = (data) => {
   return async (dispatch, getState) => {
-    await dispatch(setTiendas({ tiendas: data }));
+    dispatch(setTiendas({ tiendas: data }));
   };
 };
 
@@ -56,10 +58,29 @@ export const getCentralLogConnection = () => {
   return async (dispatch, getState) => {
     try {
       const { data } = await SDKZeus.getLogConnection();
-      await dispatch(setLogConnection(data.data));
+      dispatch(setLogConnection(data.data));
       dispatch(setCountDisconnect({ countDisconnected: data.data.length }));
     } catch (err) {
       console.log(err);
     }
   };
 };
+
+export const asyncLogin = ({ username, password }) => {
+  return async (dispatch, getState) => {
+    dispatch(startLoader ());
+    try {
+      const { data } = await SDKZeus.setLogin({ username, password });
+      console.log(data)
+        if(data){
+          localStorage.setItem("@userSQK", true);
+          dispatch(setAuth({auth:true}));
+          dispatch(setAuthError({ authError: "" }));
+        }
+    } catch (err) { 
+      console.log(err);
+      dispatch(setAuthError({ authError: err.message }));
+    }
+    dispatch(stopLoader());
+  };
+}

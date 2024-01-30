@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  auth:true,
+  auth:false,
   authError:'',
   value: 0,
   tiendas:[],
@@ -19,6 +19,7 @@ export const dataSlice = createSlice({
   initialState,
   reducers: {
     setAuth: (state, action) => {
+      console.log(action.payload)
       state.auth = action.payload.auth
     },
     setAuthError:(state, action) => {

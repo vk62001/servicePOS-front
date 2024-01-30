@@ -7,25 +7,25 @@ import { Input } from "../../components/Input";
 import { faLock, faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../../components/Button";
 import { LoginComplement } from "../../components/LoginComplement";
+import { asyncLogin, setAuthError } from "../../store/data";
 
 export const Login = () => {
     
 const dispatch =  useDispatch();
   const  {authError }  = useSelector((state)=>state.dataSlice);
-  const [email, setEmail] = useState('vk21@email.com');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [loginError, setLoginError] = useState('');
 
   const onLogin = () => {
     dispatch(setAuthError(''));
     setLoginError('');
-    dispatch(startLoader());
     const objUser = {
-      email, 
+      username:email, 
       password
     };
-    //dispatch(setLogin(objUser));
+    dispatch(asyncLogin(objUser));
   };
 
   useEffect(() => {
