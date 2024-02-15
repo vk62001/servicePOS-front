@@ -93,8 +93,8 @@ export const Monitor = () => {
     if (Object.keys(socketTiendas.filter((e) => e.tiendaId != 1)).length > 0) {
 
       const sockeTiendaId = filterSocketTienda();
-      // console.log(sockeTiendaId, "sockeTiendaId");
-      if(!sockeTiendaId[0].id)return;
+      // console.log(sockeTiendaId.length, "sockeTiendaId", Object.keys(sockeTiendaId).length);
+      if(Object.keys(sockeTiendaId)===0)return;
       const objSockets = {
         socketTiendaId: sockeTiendaId[0].id,
         tiendaId: sockeTiendaId[0].tienda,
@@ -167,6 +167,16 @@ export const Monitor = () => {
     }
   };
 
+  const getDataLog = () => {
+    const sockeTiendaId = filterSocketTienda();
+    const objSockets = {
+      socketTiendaId: sockeTiendaId[0].id,
+      tiendaId: sockeTiendaId[0].tienda,
+    };
+    socketApp.current.emit('activeGetDataLogManually', objSockets);
+  }
+
+
   useEffect(() => {
     // getcountInfo();
     getCountInfoYesterday();
@@ -179,7 +189,6 @@ export const Monitor = () => {
     getExistenciasCentral();
     if (Object.keys(socketTiendas).length > 0) {
       const sockeTiendaId = filterSocketTienda();
-      console.log(sockeTiendaId);
       const objSockets = {
         // monitorId: socketApp.current.id,
         socketTiendaId: sockeTiendaId[0].id,
@@ -295,6 +304,7 @@ export const Monitor = () => {
                 title=""
                 icon={faRecycle}
                 className={"bg-sqgreen-900 w-10 rounded"}
+                onClick={getDataLog}
               />
               <span className="text-gray-700 text-small">Actualizar</span>
             </div>
@@ -305,7 +315,7 @@ export const Monitor = () => {
                 className={"bg-sqgreen-900 w-10 rounded"}
                 onClick={() => setShowModal(true)}
               />
-              <span className="text-gray-700 text-small">Reportar</span>
+              <span className="text-gray-700 text-small">Productos</span>
             </div>
           </div>
         </Card>

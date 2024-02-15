@@ -13,21 +13,20 @@ import { getCacheString } from '../cache/cache'
 export const MainNavigator = () => {
   const dispatch = useDispatch();
   const {auth} = useSelector(state=>state.dataSlice);
+  console.log(auth)
 
 
+//   useEffect(() => {
 
-  useEffect(() => {
+//     const auth =  getCacheString('@userSQK')
+//     if (auth==="true") {
+//       dispatch(setAuth(true));
+//     }
 
-    const auth =  getCacheString('@userSQK')
-    console.log(auth);
-    if (auth==="true") {
-      dispatch(setAuth(true));
-    }
-
-  return () => {
+//   return () => {
     
-  }
-}, [])
+//   }
+// }, [])
 
 
   return (
@@ -54,6 +53,7 @@ const AuthNavigation = () => {
 }
 
 const DashboardNavigation = () => {
+  console.log("DashboardNavigation")
   const { socketTiendas, tiendas} = useSelector((state) => state.dataSlice);
   const dispatch = useDispatch()
 
