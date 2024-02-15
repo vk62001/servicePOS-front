@@ -16,17 +16,17 @@ export const MainNavigator = () => {
   console.log(auth)
 
 
-//   useEffect(() => {
+  useEffect(() => {
 
-//     const auth =  getCacheString('@userSQK')
-//     if (auth==="true") {
-//       dispatch(setAuth(true));
-//     }
+    const auth =  getCacheString('@userSQK')
+    if (auth==="true") {
+      dispatch(setAuth(true));
+    }
 
-//   return () => {
+  return () => {
     
-//   }
-// }, [])
+  }
+}, [])
 
 
   return (
