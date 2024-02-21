@@ -18,9 +18,10 @@ export const MainNavigator = () => {
 
   useEffect(() => {
 
-    const auth =  getCacheString('@userSQK')
-    if (auth==="true") {
-      dispatch(setAuth(true));
+    const auth =  getCacheString('@userSQK');
+    console.log(auth)
+    if (auth=="true") {
+      dispatch(setAuth({auth: true}));
     }
 
   return () => {

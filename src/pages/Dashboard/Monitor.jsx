@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Card } from "../../components/Card";
 import { Button } from "../../components/Button";
 import {
@@ -34,8 +34,9 @@ export const Monitor = () => {
   const [totalRegisterCentral, setTotalRegisterCentral] = useState(0);
   const [dataYesterday, setDataYesterday] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [dataPOS, setDataPOS] = useState([])
-
+  const [dataPOS, setDataPOS] = useState([]);
+  const [dataTienda, setDataTienda] = useState([])
+    const posTemp = useRef([]);
   // useEffect(() => {
   //   dispatch(getCentralTables(id));
   //   //peticion por sockets
@@ -78,11 +79,24 @@ export const Monitor = () => {
     return dataPOS.map((e, i) => {
       // console.log(e, "e")
       return (
-        <div key={i} className="flex justify-between items-center">
-          <p className="text-xs text-gray-700">{e.producto_Id}</p>
-          <p className="text-xs text-gray-700">{e.descripcion_larga}</p>
-          <p className="text-xs text-gray-700">{e.existencia}</p>
-        </div>
+        <tr key={i} className="">
+          <td className="text-xs text-gray-700">{e.producto_Id}</td>
+          <td className="text-xs text-gray-700">{e.descripcion_larga}</td>
+          <td className="text-xs text-gray-700 text-center">{e.existencia}</td>
+        </tr>
+      );
+    });
+  };
+  const renderInventarioTienda = () => {  
+    if(Object.keys(dataTienda).length===0)return;
+    return dataTienda.map((e, i) => {
+      // console.log(e, "e")
+      return (
+        <tr key={i} className="">
+          <td className="text-xs text-gray-700">{e.producto_Id}</td>
+          <td className="text-xs text-gray-700">{e.descripcion_larga}</td>
+          <td className="text-xs text-gray-700 text-center">{e.existencia}</td>
+        </tr>
       );
     });
   };
@@ -102,8 +116,8 @@ export const Monitor = () => {
       console.log(objSockets, "objSockets");
       socketApp.current.emit("getExistencias", objSockets); //Se emite el evento hacia serverPOs-Central
       socketApp.current.on("setExistencias", (data) => {
-        console.log(data.data, "Existencias Tienda ");
           setDataPOS(data.data);
+          posTemp.current = data.data;
       });
     }
   };
@@ -119,9 +133,21 @@ export const Monitor = () => {
       socketApp.current.emit("getExistenciasCentral", objSockets); //Se emite el evento hacia serverPOs-Central
       socketApp.current.on("setExistenciasCentral", (data) => {
         console.log(data.data, "Existencias Central");
+        setDataTienda(data.data);
       });
     }
   };
+
+
+  const filter = (text) => {
+    if (text.length === 0) {
+      setDataPOS(posTemp.current);
+      return;
+    };
+    const tempValue = posTemp.current.filter(element => (element.descripcion_larga.toLowerCase().includes(text.toLowerCase()) ));
+    setDataPOS(tempValue);
+  };
+
   const getcountInfo = async (data) => {
     try {
       await dispatch(startLoader());
@@ -320,12 +346,50 @@ export const Monitor = () => {
           </div>
         </Card>
       </div>
-      <Modal 
-        show={showModal} 
+      <Modal
+        show={showModal}
         onClose={() => setShowModal(false)}
         title={"Inventario"}
       >
-        {renderInventario()}
+        <div className="flex justify-between" style={{maxHeight:750}}>
+          <div className="w-5/12 h-3/4" style={{maxHeight:650}} >
+            <h1 className="mulishBold text-sqgreen-900 w-full m-2 text-center">Tienda</h1>
+            <input
+              onChange={(e) => filter(e.target.value)} 
+              className="w-11/12 mx-auto p-2 rounded-md border-2 border-gray-300" type="text" placeholder="Buscar producto" />
+            <div className="relative sm:rounded-lg mt-8  max-h-128 overflow-y-auto">
+              <table className="w-full text-sm text-left text-gray-500">
+                <thead className="text-xs text-gray-700 bg-gray-100  sticky top-0 z-10">
+                  <tr>
+                  <th className={"w-1/12 py-3  text-center"}>ID</th>
+                  <th className={"w-1/12 py-3  text-center"}>Descripción</th>
+                  <th className={"w-1/12 py-3  text-center"}>Can.</th>
+                </tr>
+              </thead>
+              <tbody>
+                {renderInventario()}
+              </tbody>
+            </table>
+            </div>
+          </div>
+          <div className="relative w-5/12">
+            <h1 className="mulishBold text-sqgreen-900 w-full m-2 text-center">Central</h1>
+            <div className="relative sm:rounded-lg mt-8  max-h-128 overflow-y-auto">
+              <table className="w-full text-sm text-left text-gray-500">
+                <thead className="text-xs text-gray-700 bg-gray-100  sticky top-0 z-10">
+                  <tr>
+                  <th className={"w-1/12 py-3  text-center"}>ID</th>
+                  <th className={"w-1/12 py-3  text-center"}>Descripción</th>
+                  <th className={"w-1/12 py-3  text-center"}>Can.</th>
+                </tr>
+              </thead>
+              <tbody>
+                {renderInventarioTienda()}
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
       </Modal>
     </div>
   );
