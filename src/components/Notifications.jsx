@@ -20,7 +20,7 @@ const renderItems = () => {
 }
 
   return (
-    <div className={`fixed  top-12 right-48 overflow-auto bg-white  text-xs text-stonte-600 p-6 rounded-lg shadow max-h-52 z-50 ${className}`}>
+    <div className={`fixed  top-12 right-20 overflow-auto bg-white  text-xs text-stonte-600 p-6 rounded-lg shadow max-h-52 z-50 ${className}`}>
         {renderItems()}
     </div>
   )

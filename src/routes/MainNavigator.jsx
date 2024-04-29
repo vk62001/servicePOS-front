@@ -13,13 +13,10 @@ import { getCacheString } from '../cache/cache'
 export const MainNavigator = () => {
   const dispatch = useDispatch();
   const {auth} = useSelector(state=>state.dataSlice);
-  console.log(auth)
-
-
+  // console.log(auth)
   useEffect(() => {
-
     const auth =  getCacheString('@userSQK');
-    console.log(auth)
+    // console.log(auth)
     if (auth=="true") {
       dispatch(setAuth({auth: true}));
     }

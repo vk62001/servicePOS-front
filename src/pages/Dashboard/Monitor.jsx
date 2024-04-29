@@ -113,7 +113,7 @@ export const Monitor = () => {
         socketTiendaId: sockeTiendaId[0].id,
         tiendaId: sockeTiendaId[0].tienda,
       };
-      console.log(objSockets, "objSockets");
+      console.log(objSockets, "objSockets 116");
       socketApp.current.emit("getExistencias", objSockets); //Se emite el evento hacia serverPOs-Central
       socketApp.current.on("setExistencias", (data) => {
           setDataPOS(data.data);
@@ -194,6 +194,7 @@ export const Monitor = () => {
   };
 
   const getDataLog = () => {
+    console.log('get data log')
     const sockeTiendaId = filterSocketTienda();
     const objSockets = {
       socketTiendaId: sockeTiendaId[0].id,
@@ -211,6 +212,7 @@ export const Monitor = () => {
 
 
   useEffect(() => {
+    console.log('useefect')
     getExistenciasTienda();
     getExistenciasCentral();
     if (Object.keys(socketTiendas).length > 0) {
@@ -225,6 +227,7 @@ export const Monitor = () => {
       socketApp.current.on("setCountRegistros", async (data) => {
         // Recibe informacion de serverPOs-Central
         // showPOS(data);
+        console.log('recibe datos count de serverPOs-Central')
         await getcountInfo(data);
       });
     }
@@ -251,16 +254,16 @@ export const Monitor = () => {
 
   return (
     <div className="mulishRegular bg-gray-100 flex flex-col justify-start h-full">
-      <div className="flex flex-col pt-2 justify-start w-full h-screen">
-        <div className="w-full flex mt-24">
+      <div className="flex flex-col pt-2 justify-start w-full min-h-screen h-full">
+      <div className="w-full flex mt-24 justify-center">
           <div className="w-7/12">
             <Card
               title={`Tienda: ${state}`}
               className=" justify-center mx-auto lg:w-11/12 md:w-11/12 bg-white h-96"
               classTitle="p-4 mulishBold text-sqgreen-900 text-2xl"
-              classBody={"flex flex-wrap justify-around"}
+              classBody={"flex flex-wrap justify-around h-80"}
             >
-              <div className="w-full">
+            <div className="flex w-full h-full justify-center">
                 <LineChart dataYesterday={dataYesterday} />
               </div>
             </Card>
