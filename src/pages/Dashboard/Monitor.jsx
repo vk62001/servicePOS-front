@@ -3,72 +3,38 @@ import { Card } from "../../components/Card";
 import { Button } from "../../components/Button";
 import {
   faBullhorn,
-  faEye,
   faRecycle,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { getCentralTables, startLoader, stopLoader } from "../../store/data";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { startLoader, stopLoader } from "../../store/data";
+import { useLocation, useParams } from "react-router-dom";
 import { SocketContext } from "../../context/SocketContext";
-import { CardData } from "../../components/CardData";
 import { PieChart } from "../../components/PieChart";
-import { APISQZeus } from "../../SDK/instanceZeuz";
 import { SDKZeus } from "../../SDK/SDKZeus";
 import { LineChart } from "../../components/LineChart";
 import { Modal } from "../../components/Modal";
+import { delay } from "../../utils/utils";
 
 export const Monitor = () => {
   const { socketApp } = useContext(SocketContext); //este es el socket para conectarnos
   const { id } = useParams();
   const { state } = useLocation();
   const dispatch = useDispatch();
-  const { centralTables, socketTiendas } = useSelector(
+  const { socketTiendas } = useSelector(
     (state) => state.dataSlice
   );
 
   const [central, setCentral] = useState([]);
-  const [posLocal, setPosLocal] = useState([]);
   const [truePercentage, setTruePercentage] = useState(0);
   const [badPercentage, setBadPercentage] = useState(0);
-  const [totalRegisterPOS, setTotalRegisterPOS] = useState(0);
-  const [totalRegisterCentral, setTotalRegisterCentral] = useState(0);
   const [dataYesterday, setDataYesterday] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [dataPOS, setDataPOS] = useState([]);
   const [dataTienda, setDataTienda] = useState([])
+  const [render, setRender ] = useState(false);
     const posTemp = useRef([]);
-  // useEffect(() => {
-  //   dispatch(getCentralTables(id));
-  //   //peticion por sockets
-  // }, [])
 
-  // useEffect(() => {
-  //   if(Object.keys(centralTables).length>0)
-  //     show()
-  // }, [centralTables])
 
-  const show = () => {
-    const newArray = [];
-    for (const key in centralTables) {
-      // console.log(key, centralTables[key]);
-      newArray.push({
-        tableName: key,
-        count: centralTables[key],
-      });
-    }
-    setCentral(newArray);
-  };
-
-  const showPOS = (data) => {
-    const newArray = [];
-    for (const key in data) {
-      newArray.push({
-        tableName: key,
-        count: data[key],
-      });
-    }
-    setPosLocal(newArray);
-  };
 
   const filterSocketTienda = () => {
     return socketTiendas.filter((e) => e.tienda === id);
@@ -77,7 +43,6 @@ export const Monitor = () => {
   const renderInventario = () => {  
     if(Object.keys(dataPOS).length===0)return;
     return dataPOS.map((e, i) => {
-      // console.log(e, "e")
       return (
         <tr key={i} className="">
           <td className="text-xs text-gray-700">{e.producto_Id}</td>
@@ -90,7 +55,6 @@ export const Monitor = () => {
   const renderInventarioTienda = () => {  
     if(Object.keys(dataTienda).length===0)return;
     return dataTienda.map((e, i) => {
-      // console.log(e, "e")
       return (
         <tr key={i} className="">
           <td className="text-xs text-gray-700">{e.producto_Id}</td>
@@ -105,15 +69,12 @@ export const Monitor = () => {
 
   const getExistenciasTienda = () => {
     if (Object.keys(socketTiendas.filter((e) => e.tiendaId != 1)).length > 0) {
-
       const sockeTiendaId = filterSocketTienda();
-      // console.log(sockeTiendaId.length, "sockeTiendaId", Object.keys(sockeTiendaId).length);
-      if(Object.keys(sockeTiendaId)===0)return;
+      if(Object.keys(sockeTiendaId).length===0)return;
       const objSockets = {
         socketTiendaId: sockeTiendaId[0].id,
         tiendaId: sockeTiendaId[0].tienda,
       };
-      // console.log(objSockets, "objSockets 116");
       socketApp.current.emit("getExistencias", objSockets); //Se emite el evento hacia serverPOs-Central
       socketApp.current.on("setExistencias", (data) => {
           setDataPOS(data.data);
@@ -125,19 +86,25 @@ export const Monitor = () => {
   const getExistenciasCentral = () => {
     if (Object.keys(socketTiendas.filter((e) => e.tiendaId != 1)).length > 0) {
       const sockeTiendaId = filterSocketTienda();
-      // console.log(sockeTiendaId, "sockeTiendaId");
+      if(Object.keys(sockeTiendaId).length===0)return;
       const objSockets = {
         tiendaId: sockeTiendaId[0].tienda,
       };
-      // console.log(objSockets, "objSockets");
       socketApp.current.emit("getExistenciasCentral", objSockets); //Se emite el evento hacia serverPOs-Central
       socketApp.current.on("setExistenciasCentral", (data) => {
-        // console.log(data.data, "Existencias Central");
         setDataTienda(data.data);
       });
     }
   };
 
+
+  useEffect(() => {
+    dispatch(startLoader());
+    if(render){
+      dispatch(stopLoader());
+    }
+    setRender(true);
+  }, [central]);
 
   const filter = (text) => {
     if (text.length === 0) {
@@ -150,20 +117,14 @@ export const Monitor = () => {
 
   const getcountInfo = async (data) => {
     try {
-      await dispatch(startLoader());
-      //const { data } = await SDKZeus.getCountInfo(id);
-      // console.log(data.data, "Datos de hoy");
       setCentral(data.data);
-      // setPosLocal(data.data.countTienda);
       const Central = data.data;
-      const Tienda = data.data.countTienda;
       const total = Object.keys(Central).length - 2;
       let totalTemp = 0;
       let totalCentral = 0;
       let totalPOS = 0;
       for (const i in Central) {
         if (i !== "Count" && i !== "id") {
-          // console.log(Central[i].Tienda, "row----");
           totalCentral = totalCentral + Central[i].Central;
           if (Central[i].Central === Central[i].Tienda) {
             totalTemp += 1;
@@ -171,17 +132,13 @@ export const Monitor = () => {
           totalPOS = totalPOS + Central[i].Tienda;
         }
       }
-      // console.log(total, totalTemp, totalCentral, totalPOS);
       const godPercentage = (totalTemp * 100) / total;
       setTruePercentage(godPercentage);
       setBadPercentage(100 - godPercentage);
-      // console.log(totalCentral, "+", totalPOS);
-      setTotalRegisterCentral(totalCentral);
-      setTotalRegisterPOS(totalPOS);
+      delay(1000);
     } catch (err) {
       console.log(err);
-    }
-    await dispatch(stopLoader());
+    };
   };
 
   const getCountInfoYesterday = async () => {
@@ -194,7 +151,6 @@ export const Monitor = () => {
   };
 
   const getDataLog = () => {
-    // console.log('get data log')
     const sockeTiendaId = filterSocketTienda();
     const objSockets = {
       socketTiendaId: sockeTiendaId[0].id,
@@ -205,31 +161,28 @@ export const Monitor = () => {
 
 
   useEffect(() => {
-    // getcountInfo();
     getCountInfoYesterday();
     return () => {};
   }, []);
 
 
   useEffect(() => {
-    // console.log('useefect')
     getExistenciasTienda();
     getExistenciasCentral();
     if (Object.keys(socketTiendas).length > 0) {
       const sockeTiendaId = filterSocketTienda();
+      if(Object.keys(sockeTiendaId).length===0)return;
+      console.time("getCountRegistros");
+
       const objSockets = {
-        // monitorId: socketApp.current.id,
         socketTiendaId: sockeTiendaId[0].id,
         tiendaId: sockeTiendaId[0].tienda,
       };
-      // console.log(socketApp, sockeTiendaId, "datos de socket");
       socketApp.current.emit("getCountRegistros", objSockets); //Se emite el evento hacia serverPOs-Central
       socketApp.current.on("setCountRegistros", async (data) => {
-        // Recibe informacion de serverPOs-Central
-        // showPOS(data);
-        // console.log('recibe datos count de serverPOs-Central')
         await getcountInfo(data);
       });
+      console.timeEnd("getCountRegistros");
     }
     return () => {};
   }, [socketTiendas]);

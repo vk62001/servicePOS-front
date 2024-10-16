@@ -6,7 +6,7 @@ export const Loader = () => {
   return (
     <>
     {loader? 
-    <div className='fixed z-10 w-screen h-screen top-0 left-0 bgLoader flex justify-center items-center flex-col'>
+    <div className='fixed z-50 w-screen h-screen top-0 left-0 bgLoader flex justify-center items-center flex-col'>
       <img src={Logo}  className="opacity-40" width={250}/>
       <div className="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
     </div>
