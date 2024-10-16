@@ -97,7 +97,7 @@ export const Login = () => {
           <p className="mt-28 text-center text-gray-600">¿No tienes cuenta?</p>
 
           <p className="absolute m-auto bottom-4 left-0 right-0 text-gray-400 text-sm text-center">
-            V 0.0.1
+            V {import.meta.env.VITE_REACT_APP_VERSION}
           </p>
         </div>
       </div>
