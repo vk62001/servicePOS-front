@@ -19,7 +19,7 @@ export const dataSlice = createSlice({
   initialState,
   reducers: {
     setAuth: (state, action) => {
-      console.log(action.payload)
+      // console.log(action.payload)
       state.auth = action.payload.auth
     },
     setAuthError:(state, action) => {

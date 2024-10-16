@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react'
-import { Route, Routes } from 'react-router-dom'
-import { Home } from '../pages/Dashboard/Home'
-import { SocketProvider } from '../context/SocketProvider'
-import { Login } from '../pages/Auth/Login'
-import { useDispatch, useSelector } from 'react-redux'
-import { NavBar } from '../components/NavBar'
-import { Monitor } from '../pages/Dashboard/Monitor'
-import { Pos } from '../pages/Dashboard/Pos'
-import { setAuth, setCountDisconnect, updatePOSL } from '../store/data'
-import { getCacheString } from '../cache/cache'
+import React, { useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
+import { Home } from "../pages/Dashboard/Home";
+import { SocketProvider } from "../context/SocketProvider";
+import { Login } from "../pages/Auth/Login";
+import { useDispatch, useSelector } from "react-redux";
+import { NavBar } from "../components/NavBar";
+import { Monitor } from "../pages/Dashboard/Monitor";
+import { Pos } from "../pages/Dashboard/Pos";
+import { setAuth, setCountDisconnect, updatePOSL } from "../store/data";
+import { getCacheString } from "../cache/cache";
 
 export const MainNavigator = () => {
   const dispatch = useDispatch();
@@ -51,7 +51,7 @@ const AuthNavigation = () => {
 }
 
 const DashboardNavigation = () => {
-  console.log("DashboardNavigation")
+  // console.log("DashboardNavigation")
   const { socketTiendas, tiendas} = useSelector((state) => state.dataSlice);
   const dispatch = useDispatch()
 

@@ -71,7 +71,7 @@ export const asyncLogin = ({ username, password }) => {
     dispatch(startLoader());
     try {
       const { data } = await SDKZeus.setLogin({ username, password });
-      console.log(data);
+      // console.log(data);
       if (data) {
         localStorage.setItem("@userSQK", true);
         dispatch(setAuth({ auth: true }));

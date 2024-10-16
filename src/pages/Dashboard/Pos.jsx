@@ -68,7 +68,7 @@ export const Pos = () => {
       return;
     }
     if (selectRadio !== "todos" && textTienda.length === 0) {
-      console.log("entra filtro");
+      // console.log("entra filtro");
       filterRadio();
       return;
     }
@@ -79,7 +79,7 @@ export const Pos = () => {
   }, [tiendas]);
 
   const renderTiendas = () => {
-    if (tempTiendas?.length === 0) return;
+    // if (tempTiendas?.length === 0) return;
     return tempTiendas?.map((e) => {
       const title = e.descripcion.split("-");
       return (
@@ -129,7 +129,7 @@ export const Pos = () => {
   };
 
   return (
-    <div className="bg-gray-100 flex flex-col justify-start h-full">
+    <div className="bg-gray-100 flex flex-col justify-start h-full min-h-screen">
       <div className="flex  pt-2 justify-start w-full h-full">
         <Card
           title={"Tiendas"}
@@ -159,7 +159,7 @@ export const Pos = () => {
             </div>
           </div>
           <div className="flex flex-wrap mt-8 justify-center h-3/6 overflow-auto pb-5">
-            {renderTiendas()}
+            {tempTiendas?.length !== 0 && renderTiendas()}
           </div>
         </Card>
       </div>

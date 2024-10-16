@@ -17,7 +17,7 @@ export const SDKZeus = {
     return APISQZeus.get(`api/pos/getCountYesterday/${tiendaId}`);
   },
   setLogin: function ({ username, password }) {
-    console.log("username, password", username, password);
+    // console.log("username, password", username, password);
     return APISQZeus.post(`api/login`, {username, password});
   },
   

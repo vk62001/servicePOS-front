@@ -113,7 +113,7 @@ export const Monitor = () => {
         socketTiendaId: sockeTiendaId[0].id,
         tiendaId: sockeTiendaId[0].tienda,
       };
-      console.log(objSockets, "objSockets 116");
+      // console.log(objSockets, "objSockets 116");
       socketApp.current.emit("getExistencias", objSockets); //Se emite el evento hacia serverPOs-Central
       socketApp.current.on("setExistencias", (data) => {
           setDataPOS(data.data);
@@ -125,14 +125,14 @@ export const Monitor = () => {
   const getExistenciasCentral = () => {
     if (Object.keys(socketTiendas.filter((e) => e.tiendaId != 1)).length > 0) {
       const sockeTiendaId = filterSocketTienda();
-      console.log(sockeTiendaId, "sockeTiendaId");
+      // console.log(sockeTiendaId, "sockeTiendaId");
       const objSockets = {
         tiendaId: sockeTiendaId[0].tienda,
       };
-      console.log(objSockets, "objSockets");
+      // console.log(objSockets, "objSockets");
       socketApp.current.emit("getExistenciasCentral", objSockets); //Se emite el evento hacia serverPOs-Central
       socketApp.current.on("setExistenciasCentral", (data) => {
-        console.log(data.data, "Existencias Central");
+        // console.log(data.data, "Existencias Central");
         setDataTienda(data.data);
       });
     }
@@ -194,7 +194,7 @@ export const Monitor = () => {
   };
 
   const getDataLog = () => {
-    console.log('get data log')
+    // console.log('get data log')
     const sockeTiendaId = filterSocketTienda();
     const objSockets = {
       socketTiendaId: sockeTiendaId[0].id,
@@ -212,7 +212,7 @@ export const Monitor = () => {
 
 
   useEffect(() => {
-    console.log('useefect')
+    // console.log('useefect')
     getExistenciasTienda();
     getExistenciasCentral();
     if (Object.keys(socketTiendas).length > 0) {
@@ -222,12 +222,12 @@ export const Monitor = () => {
         socketTiendaId: sockeTiendaId[0].id,
         tiendaId: sockeTiendaId[0].tienda,
       };
-      console.log(socketApp, sockeTiendaId, "datos de socket");
+      // console.log(socketApp, sockeTiendaId, "datos de socket");
       socketApp.current.emit("getCountRegistros", objSockets); //Se emite el evento hacia serverPOs-Central
       socketApp.current.on("setCountRegistros", async (data) => {
         // Recibe informacion de serverPOs-Central
         // showPOS(data);
-        console.log('recibe datos count de serverPOs-Central')
+        // console.log('recibe datos count de serverPOs-Central')
         await getcountInfo(data);
       });
     }
@@ -258,7 +258,7 @@ export const Monitor = () => {
       <div className="w-full flex mt-24 justify-center">
           <div className="w-7/12">
             <Card
-              title={`Tienda: ${state}`}
+              title={`Tienda: ${state ? state : id}`}
               className=" justify-center mx-auto lg:w-11/12 md:w-11/12 bg-white h-96"
               classTitle="p-4 mulishBold text-sqgreen-900 text-2xl"
               classBody={"flex flex-wrap justify-around h-80"}

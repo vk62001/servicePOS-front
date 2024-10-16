@@ -25,11 +25,12 @@ export const MapaTienda = () => {
   });
 
   const renderTiendasMap = () => {
-    return tiendas?.map((e) => {
+    return tiendas?.map((e, index) => {
       const position = [e.latitud, e.longitud];
       if (e.latitud) {
         return (
           <Marker
+            key={index}
             position={position}
             icon={e.connected ? IconConnected : IconDisconnected}
           >
@@ -41,7 +42,7 @@ export const MapaTienda = () => {
   };
 
   return (
-    <Card title={"Mapa"} className={"mt-24 justify-center mx-auto lg:w-11/12"}>
+    <Card title={"Mapa"} className={"mt-24 justify-center mx-auto w-[90%] lg:w-11/12"}>
       <MapContainer
         center={[20.612132, -100.4515026]}
         zoom={9.4}

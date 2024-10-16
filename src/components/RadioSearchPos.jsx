@@ -21,7 +21,7 @@ export const RadioSearchPos = ({value, selectRadio}) => {
                 checked={value === "todos"}
                 onChange={handleOptionChange}
             />
-            <label for="horizontal-list-radio-license" className="w-full py-3 px-2 ms-2 text-sm font-medium text-gray-900 ">Todos </label>
+            <label htmlFor="horizontal-list-radio-license" className="w-full py-3 px-2 ms-2 text-sm font-medium text-gray-900 ">Todos </label>
         </div>
     </li>
     <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r ">
@@ -34,7 +34,7 @@ export const RadioSearchPos = ({value, selectRadio}) => {
                 checked={value === "conectados"}
                 onChange={handleOptionChange}
             />
-            <label for="horizontal-list-radio-id" className="w-full py-3 px-2 ms-2 text-sm font-medium text-gray-900 ">Conectados</label>
+            <label htmlFor="horizontal-list-radio-id" className="w-full py-3 px-2 ms-2 text-sm font-medium text-gray-900 ">Conectados</label>
         </div>
     </li>
     <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r ">
@@ -48,7 +48,7 @@ export const RadioSearchPos = ({value, selectRadio}) => {
                 checked={value === "desconectados"}
                 onChange={handleOptionChange}
             />
-            <label for="horizontal-list-radio-military" className="w-full py-3 px-2 ms-2 text-sm font-medium text-gray-900 ">Desconectados</label>
+            <label htmlFor="horizontal-list-radio-military" className="w-full py-3 px-2 ms-2 text-sm font-medium text-gray-900 ">Desconectados</label>
         </div>
     </li>
 </ul>

@@ -55,7 +55,7 @@ export const MonitorPOS = () => {
   useEffect(() => {
       if(Object.keys(socketTiendas).length>0){
         const sockeTiendaId = filterSocketTienda();
-        console.log(sockeTiendaId)  
+        // console.log(sockeTiendaId)  
         const objSockets = {
             monitorId: socketApp.current.id,
             socketTiendaId: sockeTiendaId[0].id
