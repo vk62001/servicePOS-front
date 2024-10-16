@@ -4,6 +4,6 @@ const URI = import.meta.env.VITE_REACT_API_ZEUS;
 
 export const APISQZeus = axios.create({
     baseURL: URI,
-    timeout: 5000,
+    timeout: 15000,
   });
 

@@ -1,4 +1,8 @@
-import { faEnvelope, faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
+import {
+  faEnvelope,
+  faEye,
+  faEyeSlash,
+} from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import React, { useEffect, useState } from "react";
@@ -7,34 +11,32 @@ import { Input } from "../../components/Input";
 import { faLock, faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../../components/Button";
 import { LoginComplement } from "../../components/LoginComplement";
+import { asyncLogin, setAuthError } from "../../store/data";
 
 export const Login = () => {
-    
-const dispatch =  useDispatch();
-  const  {authError }  = useSelector((state)=>state.dataSlice);
-  const [email, setEmail] = useState('vk21@email.com');
-  const [password, setPassword] = useState('123456');
+  const dispatch = useDispatch();
+  const { authError } = useSelector((state) => state.dataSlice);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
-  const [loginError, setLoginError] = useState('');
+  const [loginError, setLoginError] = useState("");
 
   const onLogin = () => {
-    dispatch(setAuthError(''));
-    setLoginError('');
-    dispatch(startLoader());
+    dispatch(setAuthError(""));
+    setLoginError("");
     const objUser = {
-      email, 
-      password
+      username: email,
+      password,
     };
-    //dispatch(setLogin(objUser));
+    dispatch(asyncLogin(objUser));
   };
 
   useEffect(() => {
-   if(authError.length>0){
-    setLoginError('Favor de revisar el usuario o contraseña')
-   }
-    return () => {
+    if (authError.length > 0) {
+      setLoginError("Favor de revisar el usuario o contraseña");
     }
-  }, [authError])
+    return () => {};
+  }, [authError]);
 
   return (
     <div className="lg:h-screen lg:w-full  flex">

@@ -8,6 +8,10 @@ const initialState = {
   socketTiendas:[],
   loader:false,
   centralTables: [],
+  flagTiendas : false,
+  countDisconnected: 0,
+  logConnection:[],
+  serverDisconnected:false
 }
 
 export const dataSlice = createSlice({
@@ -15,13 +19,13 @@ export const dataSlice = createSlice({
   initialState,
   reducers: {
     setAuth: (state, action) => {
+      // console.log(action.payload)
       state.auth = action.payload.auth
     },
     setAuthError:(state, action) => {
       state.authError =  action.payload;
     },
     setTiendas:(state, action) => {
-      console.log(action.payload)
       state.tiendas =  action.payload.tiendas
     },
     setSocketTiendas:(state, action) => {
@@ -36,6 +40,18 @@ export const dataSlice = createSlice({
     stopLoader: (state) => {
       state.loader = false;
     },
+    setFlagTiendas: (state, action) =>{
+      state.flagTiendas = action.payload.flagTiendas;
+    },
+    setCountDisconnect : (state, action) =>{
+      state.countDisconnected = action.payload.countDisconnected;
+    },
+    setLogConnection : (state, action) =>{
+      state.logConnection = action.payload
+    },
+    setServerDisconnected: (state, action) => {
+      state.serverDisconnected =  action.payload.serverDisconnected
+    }
   },
 })
 
@@ -47,5 +63,10 @@ export const {
   setCentralTables,
   startLoader, 
   stopLoader, 
-  setSocketTiendas  } = dataSlice.actions
+  setSocketTiendas,
+  setFlagTiendas,
+  setCountDisconnect,
+  setLogConnection,
+  setServerDisconnected
+} = dataSlice.actions
 

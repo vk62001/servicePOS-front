@@ -131,7 +131,6 @@ input[type="date"]::-moz-calendar-picker-indicator {
   height: 700px;
   z-index: 0;
 }
-
-.leaflet-default-icon-path {
-  background-image: url(https://unpkg.com/leaflet@1.9.2/dist/images/marker-icon.png);
+.leaflet-right {
+  display: none !important;
 }
