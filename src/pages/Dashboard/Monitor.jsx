@@ -98,12 +98,18 @@ export const Monitor = () => {
   };
 
 
+  const stopCharge = async() => {
+    await delay(5000);
+      dispatch(stopLoader());
+  }
+
   useEffect(() => {
     dispatch(startLoader());
     if(render){
       dispatch(stopLoader());
     }
     setRender(true);
+    stopCharge()
   }, [central]);
 
   const filter = (text) => {
