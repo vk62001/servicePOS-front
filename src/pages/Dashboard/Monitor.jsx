@@ -215,7 +215,7 @@ export const Monitor = () => {
     <div className="mulishRegular bg-gray-100 flex flex-col justify-start h-full">
       <div className="flex flex-col pt-2 justify-start w-full min-h-screen h-full">
       <div className="w-full flex mt-24 justify-center">
-          <div className="w-7/12">
+          <div className="md:w-7/12 xs:w-full">
             <Card
               title={`Tienda: ${state ? state : id}`}
               className=" justify-center mx-auto lg:w-11/12 md:w-11/12 bg-white h-96"
@@ -227,12 +227,12 @@ export const Monitor = () => {
               </div>
             </Card>
           </div>
-          <div className="w-4/12 flex justiy-center">
+          <div className="md:w-4/12 flex justiy-center xs:w-0 xs:invisible md:visible">
             <Card
               title={"Coincidencias"}
               className={"bg-white"}
               classTitle="text-sqgreen-900 p-2"
-              classBody={"w-full flex justify-center flex-col pb-2"}
+              classBody={"w-full flex justify-center flex-col pb-2 "}
             >
               <h1 className="mulishRegular text-center w-full text-1xl text-sqgreen-900">
                 Porcentaje de coincidencia
@@ -258,12 +258,12 @@ export const Monitor = () => {
         </div>
         <Card
           // title={"Data"}
-          className={"mx-auto lg:w-11/12 md:w-11/12 mt-10 bg-white"}
+          className={"mx-auto xs:flex xs:flex-col xs:w-full lg:w-11/12 md:w-11/12 mt-10 bg-white"}
           // classTitle="p-4 mulishBold text-sqgreen-900 text-2xl"
           classBody={"flex"}
           classHR={"hidden"}
         >
-          <div className="w-10/12 flex justify-center">
+          <div className="xs:w-full md:w-10/12 flex justify-center">
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-2 w-10/12">
               <h1 className="mulishBold text-sqgreen-900 w-full m-2 text-center">
                 DATOS ACTUALES

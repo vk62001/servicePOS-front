@@ -4,6 +4,7 @@ import {
   faEyeSlash,
 } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Kernel  from '../../assets/images/kernel.png';
 
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,7 +13,7 @@ import { faLock, faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../../components/Button";
 import { LoginComplement } from "../../components/LoginComplement";
 import { asyncLogin, setAuthError } from "../../store/data";
-
+import Logo from '../../assets/images/logo.png';
 export const Login = () => {
   const dispatch = useDispatch();
   const { authError } = useSelector((state) => state.dataSlice);
@@ -40,12 +41,20 @@ export const Login = () => {
 
   return (
     <div className="lg:h-screen lg:w-full  flex">
-      <div className="mulishRegular relative md:w-2/5 h-screen  flex flex-column items-center justify-center">
-        <div className="contenLogin md:w-7/12">
-          <h1 className="mulishBold text-center text-3xl verdeprincipal">
+      <div className="mulishRegular relative xs:w-full md:w-2/5 h-screen  flex flex-column items-center justify-center">
+        <div className="contenLogin xs:w-11/12 md:w-7/12">
+          <h1 className="mulishBold xs:invisible text-center text-3xl verdeprincipal">
             Bienvenido
           </h1>
-          <p className="text-center text-xs tracking-wide mt-2 ">
+          <div className="w-full md:invible flex justify-center flex-col">
+            <img src={Logo}  width="125" className="self-center"/>
+            <img 
+            className="md:invisible self-center"
+            style={{filter: "drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.7))"}}
+              src={Kernel}  width="125"
+              />
+            </div>
+          <p className="text-center text-xs tracking-wide md:mt-2 xs:mt-10">
             Ingresa tu usuario y contraseña
           </p>
           <div className="inputLogin mt-20 relative">
