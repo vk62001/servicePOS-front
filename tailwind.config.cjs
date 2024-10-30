@@ -6,6 +6,17 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    screens: {
+      'xs': '340px',
+      'md': '640px',
+      // => @media (min-width: 640px) { ... }
+
+      'lg': '1024px',
+      // => @media (min-width: 1024px) { ... }
+
+      'xl': '1280px',
+      // => @media (min-width: 1280px) { ... }
+    },
     colors:{
       orange: colors.orange,
       gray: colors.gray,

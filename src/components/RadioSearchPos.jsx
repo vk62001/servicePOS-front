@@ -10,7 +10,7 @@ export const RadioSearchPos = ({value, selectRadio}) => {
   return (
     <>
 
-<ul className="items-center text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex ">
+<ul className="items-center text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg xs:flex flex ">
     <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r ">
         <div className="flex items-center px-3">
             <input 
