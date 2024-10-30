@@ -3,8 +3,8 @@ import { SocketContext } from './SocketContext';
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
 import { getCentralLogConnection, setServerDisconnected, setSocketTiendas } from '../store/data';
-import { playAlertSound, playEmergencySound } from '../utils/utils';
-
+// import { playAlertSound, playEmergencySound } from '../utils/utils'; -> Changed on 2024-10-23 for production build
+import { playAlertSound } from '../utils/utils';
 
 export const SocketProvider = ({children}) => {
 
@@ -43,7 +43,7 @@ export const SocketProvider = ({children}) => {
         socketApp.current.on('disconnect', (reason)=>{
           console.log('desconectado: ', reason);
           dispatch(setServerDisconnected({serverDisconnected:true}))
-          playEmergencySound();
+          // playEmergencySound();
         });
 
         socketApp.current.on('roomUsers', e=>{

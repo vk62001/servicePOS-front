@@ -8,11 +8,11 @@ import { getAllPOS, getCentralLogConnection } from './store/data'
 import { useDispatch } from 'react-redux'
 
 function App() {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getAllPOS())
-    dispatch(getCentralLogConnection());
-  }, [])
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   dispatch(getAllPOS())
+  //   dispatch(getCentralLogConnection());
+  // }, [])
 
   return (
     <>

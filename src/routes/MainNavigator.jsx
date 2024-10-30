@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavBar } from "../components/NavBar";
 import { Monitor } from "../pages/Dashboard/Monitor";
 import { Pos } from "../pages/Dashboard/Pos";
-import { setAuth, setCountDisconnect, updatePOSL } from "../store/data";
+import { getAllPOS, getCentralLogConnection, setAuth, setCountDisconnect, updatePOSL } from "../store/data";
 import { getCacheString } from "../cache/cache";
 
 export const MainNavigator = () => {
@@ -52,7 +52,7 @@ const AuthNavigation = () => {
 
 const DashboardNavigation = () => {
   // console.log("DashboardNavigation")
-  const { socketTiendas, tiendas} = useSelector((state) => state.dataSlice);
+  const { socketTiendas, tiendas, auth} = useSelector((state) => state.dataSlice);
   const dispatch = useDispatch()
 
 
@@ -90,6 +90,13 @@ const DashboardNavigation = () => {
   useEffect(() => {
     updateSockets()
   }, [socketTiendas])
+
+  useEffect(() => {
+    console.log('cargando tiendas y log conection', auth)
+    dispatch(getAllPOS())
+    dispatch(getCentralLogConnection());
+  }, [auth])
+  
 
     return (
       <>
