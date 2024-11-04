@@ -32,13 +32,6 @@ export const SocketProvider = ({children}) => {
           dispatch(setServerDisconnected({serverDisconnected:false}))
         });
 
-        socket.io.on("reconnection_attempt", () => {
-          // {
-          // query:{
-          //   tienda: 1,
-          //   room:'kernel'
-          // }
-        });
 
         socketApp.current.on('disconnect', (reason)=>{
           console.log('desconectado: ', reason);

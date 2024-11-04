@@ -20,7 +20,6 @@ import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons/faRightFro
 
 export const Pos = () => {
   const { tiendas } = useSelector((state) => state.dataSlice);
-  // console.log(tiendas);
   const [textTienda, setTextTienda] = useState("");
   const [tempTiendas, setTempTiendas] = useState([]);
   const [selectRadio, setSelectRadio] = useState("conectados");
@@ -110,6 +109,7 @@ export const Pos = () => {
               <p className="text-small">{title[1]} </p>
               <p className="text-small">{e.ciudad} </p>
             </div>
+            <div className="w-4/12 text-center text-sqgreen-900">v: {e.versionPos?e.versionPos:'s/n'}</div>
             <div className="absolute right-2 justify-end md:invisible ">
               <FontAwesomeIcon icon={faChevronRight} className={`text-2xl text-sqgreen-900 `} />
             </div>
