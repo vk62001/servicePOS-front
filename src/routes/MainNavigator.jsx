@@ -64,13 +64,14 @@ const DashboardNavigation = () => {
     if (Object.keys(tiendas).length > 0) {
       let num =0;
       const result = tiendas.map(e => {
-
+        
         if (socketTiendas) {
           const check = socketTiendas.filter(j => e.clave === (+j.tienda));
 
           if (check[0]) {
             return {
               ...e,
+              versionPos: check[0].versionPos,
               connected: true
             }
           };
